@@ -10,7 +10,7 @@ import TipKit
 
 @main
 struct FieldFinder_AppApp: App {
-    
+    @UIApplicationDelegateAdaptor(CustomAppDelegate.self) var delegate
     @State var appState = AppState()
     
     init() {

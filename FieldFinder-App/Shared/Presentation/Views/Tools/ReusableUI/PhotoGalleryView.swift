@@ -37,12 +37,14 @@ struct PhotoGalleryView: View {
                                 }
 
                         case .failure:
-                            Image(systemName: "photo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: .infinity)
-                                .frame(height: height)
-                                .background(Color.gray.opacity(0.3))
+                            VStack(spacing: 10) {
+                                Image(systemName: "photo.badge.plus")
+                                    .font(.system(size: 40))
+                                Text("Sin fotos disponibles")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                            }
+                            .foregroundStyle(.secondary)
                         @unknown default:
                             EmptyView()
                         }
@@ -56,10 +58,14 @@ struct PhotoGalleryView: View {
             }
 
         } else {
-            VStack {
-                Text("No hay fotos disponibles")
-                    .foregroundStyle(.black)
+            VStack(spacing: 10) {
+                Image(systemName: "photo.badge.plus")
+                    .font(.system(size: 40))
+                Text("Sin fotos disponibles")
+                    .font(.caption)
+                    .fontWeight(.medium)
             }
+            .foregroundStyle(.gray)
             .frame(maxWidth: .infinity)
             .frame(height: height)
             .background(Color.gray.opacity(0.3))

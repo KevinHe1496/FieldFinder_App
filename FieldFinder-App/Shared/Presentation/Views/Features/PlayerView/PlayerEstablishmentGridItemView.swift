@@ -55,7 +55,7 @@ struct PlayerEstablishmentGridItemView: View {
                 try await viewModelUser.getMe()
             }
         }
-        .onChange(of: viewModel.favoritesData) { _ in
+        .onChange(of: viewModel.favoritesData) { _, _ in
             favoriteState = viewModel.isFavorite(establishmentId: establishment.id)
         }
         .padding()

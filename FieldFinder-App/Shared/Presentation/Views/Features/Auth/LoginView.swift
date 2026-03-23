@@ -9,12 +9,15 @@
 import SwiftUI
 
 struct LoginView: View {
-    
-  
+
+    #if DEBUG
+    @State private var email = "kevin@example.com"
+    @State private var password = "123456"
+    #else
     // MARK: - State Properties
     @State private var email = ""
     @State private var password = ""
-   
+    #endif
     
     @Environment(AppState.self) var appState
     

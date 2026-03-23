@@ -15,28 +15,28 @@ struct AppTabBarView: View {
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
         tabBarAppearance.backgroundColor = UIColor.systemGroupedBackground
-
+        
         // Deseleccionado: ícono y texto gris
         tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .lightGray
         tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor.lightGray
         ]
-
+        
         // Seleccionado: ícono y texto verde
         tabBarAppearance.stackedLayoutAppearance.selected.iconColor = UIColor(Color.primaryColorGreen)
         tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor(Color.primaryColorGreen) 
+            .foregroundColor: UIColor(Color.primaryColorGreen)
         ]
-
+        
         UITabBar.appearance().standardAppearance = tabBarAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
     }
-
-
+    
+    
     
     var body: some View {
         TabView(selection: $tabSelection) {
-           
+            
             Tab("Inicio", systemImage: "house.fill", value: tabSelection) {
                 PlayerView(viewModel: viewModel)
             }
@@ -53,6 +53,8 @@ struct AppTabBarView: View {
         }
         .tint(.primaryColorGreen)
         .ignoresSafeArea(.keyboard)
+        .task { await viewModel.loadData() }  // ← carga al aparecer la TabBar
+        
     }
 }
 

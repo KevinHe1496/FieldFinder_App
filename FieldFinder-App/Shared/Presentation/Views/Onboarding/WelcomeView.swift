@@ -31,6 +31,7 @@ struct WelcomeView: View {
                         AppTabBarView()
                     } label: {
                         CustomButtonView(title: "Continuar", color: .primaryColorGreen, textColor: .white) {
+                            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in }
                             hasSeenWelcome = true
                             appState.status = .home
                         }

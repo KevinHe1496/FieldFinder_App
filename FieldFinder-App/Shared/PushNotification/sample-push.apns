@@ -1,0 +1,9 @@
+{
+    "Simulator Target Bundle": "com.ravecodesolutions.fieldfinder",
+    "aps": {
+        "alert": {
+            "title": "This is a test notification title",
+            "body": "This is a test notification body"
+        }
+    }
+}
