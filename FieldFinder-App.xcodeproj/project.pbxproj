@@ -129,6 +129,8 @@
 		C95C5D0C2DD8F7E000A5310C /* CoverImageTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95C5D0B2DD8F7E000A5310C /* CoverImageTip.swift */; };
 		C96132252E1F2D17003ACFB8 /* Configuration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = C96132242E1F2D17003ACFB8 /* Configuration.storekit */; };
 		C961A2D82DDBBEA600A6BF8D /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C961A2D72DDBBEA600A6BF8D /* WelcomeView.swift */; };
+		C96DCDE12E5FC93700DF3DD0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C96DCDE02E5FC93700DF3DD0 /* GoogleService-Info.plist */; };
+		C96DCDE42E5FCA6F00DF3DD0 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = C96DCDE32E5FCA6F00DF3DD0 /* FirebaseMessaging */; };
 		C98B8BED2DD4FEE8004F05A3 /* Establishment-coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B8BEC2DD4FEE8004F05A3 /* Establishment-coordinate.swift */; };
 		C98B8BEF2DD4FFB3004F05A3 /* MapEstablishmentAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B8BEE2DD4FFB3004F05A3 /* MapEstablishmentAnnotationView.swift */; };
 		C98B8BF12DD5015B004F05A3 /* EstablishmentSelectedMapDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B8BF02DD5015B004F05A3 /* EstablishmentSelectedMapDetailView.swift */; };
@@ -147,6 +149,8 @@
 		C9C7BABB2DCE8A9D007CB3FA /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C7BABA2DCE8A9D007CB3FA /* FavoritesView.swift */; };
 		C9C7BABE2DCE8D71007CB3FA /* ProfileUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C7BABD2DCE8D71007CB3FA /* ProfileUserView.swift */; };
 		C9CBEEF22DEB5BDB002048C3 /* FullscreenImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CBEEF12DEB5BDB002048C3 /* FullscreenImageView.swift */; };
+		C9D484202E4FF4FA00985DEA /* sample-push.apns in Resources */ = {isa = PBXBuildFile; fileRef = C9D4841F2E4FF4FA00985DEA /* sample-push.apns */; };
+		C9D484222E4FFFA100985DEA /* CustomAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D484212E4FFFA100985DEA /* CustomAppDelegate.swift */; };
 		C9D4CA512DD7E36C00296604 /* FieldInfoSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D4CA502DD7E36C00296604 /* FieldInfoSection.swift */; };
 		C9D4CA532DD7E37100296604 /* FieldAttributesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D4CA522DD7E37100296604 /* FieldAttributesSection.swift */; };
 		C9D4CA602DD7E6AE00296604 /* EstablishmentServicesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D4CA5F2DD7E6AE00296604 /* EstablishmentServicesSection.swift */; };
@@ -329,6 +333,7 @@
 		C95C5D0B2DD8F7E000A5310C /* CoverImageTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverImageTip.swift; sourceTree = "<group>"; };
 		C96132242E1F2D17003ACFB8 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = Configuration.storekit; path = Shared/Configuration.storekit; sourceTree = "<group>"; };
 		C961A2D72DDBBEA600A6BF8D /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		C96DCDE02E5FC93700DF3DD0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C98B8BEC2DD4FEE8004F05A3 /* Establishment-coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Establishment-coordinate.swift"; sourceTree = "<group>"; };
 		C98B8BEE2DD4FFB3004F05A3 /* MapEstablishmentAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapEstablishmentAnnotationView.swift; sourceTree = "<group>"; };
 		C98B8BF02DD5015B004F05A3 /* EstablishmentSelectedMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstablishmentSelectedMapDetailView.swift; sourceTree = "<group>"; };
@@ -349,6 +354,8 @@
 		C9C7BABA2DCE8A9D007CB3FA /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		C9C7BABD2DCE8D71007CB3FA /* ProfileUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUserView.swift; sourceTree = "<group>"; };
 		C9CBEEF12DEB5BDB002048C3 /* FullscreenImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenImageView.swift; sourceTree = "<group>"; };
+		C9D4841F2E4FF4FA00985DEA /* sample-push.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sample-push.apns"; sourceTree = "<group>"; };
+		C9D484212E4FFFA100985DEA /* CustomAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAppDelegate.swift; sourceTree = "<group>"; };
 		C9D4CA502DD7E36C00296604 /* FieldInfoSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldInfoSection.swift; sourceTree = "<group>"; };
 		C9D4CA522DD7E37100296604 /* FieldAttributesSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldAttributesSection.swift; sourceTree = "<group>"; };
 		C9D4CA5F2DD7E6AE00296604 /* EstablishmentServicesSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstablishmentServicesSection.swift; sourceTree = "<group>"; };
@@ -370,6 +377,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C96DCDE42E5FCA6F00DF3DD0 /* FirebaseMessaging in Frameworks */,
 				C939BC732DCCF88400B98C16 /* KeychainSwift in Frameworks */,
 				C99E4D3C2DE6336800FA04AE /* StoreKit.framework in Frameworks */,
 			);
@@ -824,6 +832,7 @@
 			isa = PBXGroup;
 			children = (
 				C953FA312DF9FC510039AE5E /* Info.plist */,
+				C96DCDE02E5FC93700DF3DD0 /* GoogleService-Info.plist */,
 				C99E4D3D2DE6337100FA04AE /* FieldFinder-App.entitlements */,
 				C939BC5D2DCCF4C200B98C16 /* Shared */,
 				C939BC562DCCF4BE00B98C16 /* Assets.xcassets */,
@@ -836,6 +845,7 @@
 		C939BC5D2DCCF4C200B98C16 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				C9D4841E2E4FF26600985DEA /* PushNotification */,
 				C99E4D492DE6559700FA04AE /* Store */,
 				C99E4D462DE64F5500FA04AE /* StoreKit */,
 				BF5614B02DCE712F003C1F66 /* Helpers */,
@@ -1049,6 +1059,15 @@
 			path = ProfileUserView;
 			sourceTree = "<group>";
 		};
+		C9D4841E2E4FF26600985DEA /* PushNotification */ = {
+			isa = PBXGroup;
+			children = (
+				C9D4841F2E4FF4FA00985DEA /* sample-push.apns */,
+				C9D484212E4FFFA100985DEA /* CustomAppDelegate.swift */,
+			);
+			path = PushNotification;
+			sourceTree = "<group>";
+		};
 		C9D4CA5A2DD7E69500296604 /* EstablishmentComponentsUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -1078,6 +1097,7 @@
 			name = "FieldFinder-App";
 			packageProductDependencies = (
 				C939BC722DCCF88400B98C16 /* KeychainSwift */,
+				C96DCDE32E5FCA6F00DF3DD0 /* FirebaseMessaging */,
 			);
 			productName = "FieldFinder-App";
 			productReference = C939BC2C2DCCF38400B98C16 /* FieldFinder-App.app */;
@@ -1161,6 +1181,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				C939BC712DCCF88400B98C16 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				C96DCDE22E5FCA5200DF3DD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C939BC2D2DCCF38400B98C16 /* Products */;
@@ -1181,7 +1202,9 @@
 			files = (
 				C939BC5A2DCCF4BE00B98C16 /* Assets.xcassets in Resources */,
 				C96132252E1F2D17003ACFB8 /* Configuration.storekit in Resources */,
+				C96DCDE12E5FC93700DF3DD0 /* GoogleService-Info.plist in Resources */,
 				C91F26372E0B183B002FD5B1 /* Localizable.strings in Resources */,
+				C9D484202E4FF4FA00985DEA /* sample-push.apns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1310,6 +1333,7 @@
 				BFFB27F22DCD45F100DD8819 /* UserAuthServiceRepositoryProtocol.swift in Sources */,
 				C92FD1072DD2B4E60008E2F9 /* PhotoGalleryView.swift in Sources */,
 				C939BC7D2DCCF8F900B98C16 /* CustomButtonView.swift in Sources */,
+				C9D484222E4FFFA100985DEA /* CustomAppDelegate.swift in Sources */,
 				C92FD0F82DD291920008E2F9 /* EstablishmentDetailView.swift in Sources */,
 				BFFB28F42DCD61A200DD8819 /* RootView.swift in Sources */,
 				C9554B4D2DDE6A2600ED501B /* ExternalLinkManager.swift in Sources */,
@@ -1523,7 +1547,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "FieldFinder-App/FieldFinder-App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = L5MH9KP95U;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1563,7 +1587,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "FieldFinder-App/FieldFinder-App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = L5MH9KP95U;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1735,6 +1759,14 @@
 				minimumVersion = 24.0.0;
 			};
 		};
+		C96DCDE22E5FCA5200DF3DD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1742,6 +1774,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C939BC712DCCF88400B98C16 /* XCRemoteSwiftPackageReference "keychain-swift" */;
 			productName = KeychainSwift;
+		};
+		C96DCDE32E5FCA6F00DF3DD0 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C96DCDE22E5FCA5200DF3DD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

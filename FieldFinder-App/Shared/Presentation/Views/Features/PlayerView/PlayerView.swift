@@ -97,9 +97,9 @@ struct PlayerView: View {
             }
             .navigationTitle("Establecimientos")
             .searchable(text: $viewModel.establishmentSearch)
-            .task {
-                await reloadEstablishments()
-            }
+//            .task {
+//                await reloadEstablishments()
+//            }
         }
     }
     

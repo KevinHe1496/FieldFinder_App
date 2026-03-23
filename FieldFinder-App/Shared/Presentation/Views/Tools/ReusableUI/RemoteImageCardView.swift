@@ -11,10 +11,8 @@ struct RemoteImageCardView: View {
     
     var adaptiveWidth: CGFloat? {
         if horizontalSizeClass == .regular {
-            // iPad: ancho completo
             return nil
         } else {
-            // iPhone: 80% del ancho
             return UIScreen.main.bounds.width * 0.8
         }
     }
@@ -26,10 +24,7 @@ struct RemoteImageCardView: View {
                     switch phase {
                     case .empty:
                         ProgressView()
-                            .frame(width: adaptiveWidth, height: adaptiveHeight)
-                            .frame(maxWidth: horizontalSizeClass == .regular ? .infinity : nil)
-                            .background(Color.gray.opacity(0.3))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .modifier(PlaceholderStyle(width: adaptiveWidth, height: adaptiveHeight, isRegular: horizontalSizeClass == .regular))
                         
                     case .success(let image):
                         image
@@ -41,32 +36,53 @@ struct RemoteImageCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                         
                     case .failure:
-                        VStack {
-                            Text("No se pudo cargar la foto")
-                        }
-                        .frame(width: adaptiveWidth, height: adaptiveHeight)
-                        .frame(maxWidth: horizontalSizeClass == .regular ? .infinity : nil)
-                        .foregroundStyle(.gray)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        // Icono cuando falla la carga
+                        PlaceholderView(systemName: "sportscourt", label: "No se pudo cargar la imagen")
+                            .modifier(PlaceholderStyle(width: adaptiveWidth, height: adaptiveHeight, isRegular: horizontalSizeClass == .regular))
                         
                     @unknown default:
                         EmptyView()
                     }
                 }
             } else {
-                VStack {
-                    Text("No hay fotos disponibles")
-                        .foregroundStyle(.black)
-                }
-                .frame(width: adaptiveWidth, height: adaptiveHeight)
-                .frame(maxWidth: horizontalSizeClass == .regular ? .infinity : nil)
-                .background(Color.gray.opacity(0.3))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                // Icono cuando ni siquiera hay URL
+                PlaceholderView(systemName: "photo.badge.plus", label: "Sin fotos disponibles")
+                    .modifier(PlaceholderStyle(width: adaptiveWidth, height: adaptiveHeight, isRegular: horizontalSizeClass == .regular))
             }
         }
+    }
+    
+    // Vista interna para el estado vacío/error
+    @ViewBuilder
+    private func PlaceholderView(systemName: String, label: String) -> some View {
+        VStack(spacing: 10) {
+            Image(systemName: systemName)
+                .font(.system(size: 40))
+            Text(label)
+                .font(.caption)
+                .fontWeight(.medium)
+        }
+        .foregroundStyle(.gray)
+    }
+}
+
+// Modificador para reutilizar el estilo del contenedor
+struct PlaceholderStyle: ViewModifier {
+    let width: CGFloat?
+    let height: CGFloat
+    let isRegular: Bool
+    
+    func body(content: Content) -> some View {
+        content
+            .frame(width: width, height: height)
+            .frame(maxWidth: isRegular ? .infinity : nil)
+            .background(Color.gray.opacity(0.15))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 
 #Preview {
+
     RemoteImageCardView(url: URL(string: "https://fieldfinder-uploads.s3.us-east-2.amazonaws.com/cancha/6E1285EF-35F3-4A85-BC8B-689C1E001404-image0.jpg"))
+
 }
