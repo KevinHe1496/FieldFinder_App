@@ -33,7 +33,7 @@ struct EstablishmentDetailView: View {
                     VStack(spacing: 20) {
                         PhotoGalleryView(photoURLs: establecimiento.photoEstablishment, height: 280)
                             .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .shadow(radius: 4)
+//                            .shadow(radius: 4)
                         
                         EstablishmentInfoSection(
                             establishment: establecimiento,
