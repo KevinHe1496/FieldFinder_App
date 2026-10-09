@@ -61,7 +61,7 @@ struct OwnerView: View {
                         .padding(.bottom)
                     }
                 }
-                .navigationTitle("Mis Canchas")
+                .navigationTitle("Mis canchas")
                 
                 .task {
                     await viewModel.getEstablishments()

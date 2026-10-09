@@ -100,7 +100,7 @@ struct EditFieldView: View {
             }
             .navigationTitle("Editar Cancha")
             .padding()
-            .alert("Mensaje", isPresented: $showAlert) {
+            .alert("Aviso", isPresented: $showAlert) {
                 Button("OK") { dismiss() }
             } message: {
                 Text(viewModel.alertMessage ?? "")

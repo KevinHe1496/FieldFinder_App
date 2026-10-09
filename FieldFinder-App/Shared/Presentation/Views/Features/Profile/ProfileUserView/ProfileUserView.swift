@@ -6,6 +6,7 @@ struct ProfileUserView: View {
     @State var viewModel = ProfileUserViewModel()
     @State private var favoritesViewModel = PlayerGetNearbyEstablishmentsViewModel()
     @State private var showDeleteUserAlert = false
+    @State private var showDeleteErrorAlert = false
 
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
 
@@ -108,17 +109,27 @@ struct ProfileUserView: View {
                 }
             }
         }
+        .alert("No pudimos eliminar tu cuenta", isPresented: $showDeleteErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Revisa tu conexión e inténtalo de nuevo.")
+        }
         .alert("Borrar mi cuenta", isPresented: $showDeleteUserAlert) {
             Button("Eliminar", role: .destructive) {
                 Task {
-                    try await viewModel.delete()
+                    // Volver al inicio solo cuando el borrado terminó.
+                    do {
+                        try await viewModel.delete()
+                        appState.closeSessionUser()
+                    } catch {
+                        showDeleteErrorAlert = true
+                    }
                 }
-                appState.status = .login
             }
 
             Button("Cancelar", role: .cancel) { }
         } message: {
-            Text("¿Estás seguro que quieres eliminar tu cuenta?")
+            Text("¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer.")
         }
     }
 }

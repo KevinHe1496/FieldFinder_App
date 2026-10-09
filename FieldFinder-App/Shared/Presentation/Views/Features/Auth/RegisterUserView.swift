@@ -1,5 +1,5 @@
 //
-//  LoginView.swift
+//  RegisterUserView.swift
 //  FieldFinder-App
 //
 //  Created by Kevin Heredia on 8/5/25.
@@ -26,118 +26,143 @@ struct RegisterUserView: View {
         _viewModel = State(initialValue: UserAuthViewModel(appState: appState))
     }
     
+    @Environment(\.dismiss) private var dismiss
+    @FocusState private var focusedField: Field?
+
+    private enum Field { case name, email, password }
+
     var body: some View {
         NavigationStack {
-            
-            VStack {
-                VStack {
-                    // MARK: - Logo Image
-                    Image(.splashLogo)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 220, height: 220)
-                    
-                    
-                    // MARK: - Login Form Section
-                    Section {
-                        VStack(spacing: 15) {
-                            
-                            // Name input field
-                            
-                            CustomTextFieldLogin(
-                                titleKey: "Nombre",
-                                textField: $name,
-                                keyboardType: .default,
-                                prompt: Text("Nombre"),
-                                colorBackground: .thirdColorWhite
-                            )
-                            .autocorrectionDisabled(true)
-                            
-                            // Email input field
-                            CustomTextFieldLogin(
-                                titleKey: "Email",
-                                textField: $email,
-                                keyboardType: .emailAddress,
-                                prompt: Text("Email"),
-                                colorBackground: .thirdColorWhite
-                            )
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled(true)
-                            
-                            // Password input field
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    // MARK: - Encabezado
+                    VStack(alignment: .leading, spacing: 14) {
+                        Image(.splashLogo)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 72, height: 72)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .accessibilityHidden(true)
+
+                        Text("Crea tu cuenta")
+                            .font(.largeTitle.bold())
+                            .foregroundStyle(.white)
+                    }
+
+                    // MARK: - Formulario
+                    VStack(spacing: 14) {
+                        CustomTextFieldLogin(
+                            titleKey: "Nombre",
+                            textField: $name,
+                            keyboardType: .default,
+                            prompt: Text("Nombre"),
+                            colorBackground: .thirdColorWhite
+                        )
+                        .textContentType(.name)
+                        .autocorrectionDisabled(true)
+                        .submitLabel(.next)
+                        .focused($focusedField, equals: .name)
+                        .onSubmit { focusedField = .email }
+
+                        CustomTextFieldLogin(
+                            titleKey: "Email",
+                            textField: $email,
+                            keyboardType: .emailAddress,
+                            prompt: Text("Email"),
+                            colorBackground: .thirdColorWhite
+                        )
+                        .textContentType(.username)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled(true)
+                        .submitLabel(.next)
+                        .focused($focusedField, equals: .email)
+                        .onSubmit { focusedField = .password }
+
+                        VStack(alignment: .leading, spacing: 6) {
                             CustomSecureFieldView(titleKey: "Contraseña", textField: $password, keyboardType: .default, prompt: Text("Contraseña"))
+                                .textContentType(.newPassword)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled(true)
-                            
-                            // Rol
-                            HStack {
-                                Text("Selecciona tu rol:")
-                                    .font(.appDescription)
-                                Spacer()
-                                Picker("Selecciona tu rol", selection: $selectedRole) {
-                                    ForEach(UserRole.allCases) { role in
-                                        Text(role.displayName)
-                                            .tag(role)
-                                    }
-                                    
+                                .submitLabel(.done)
+                                .focused($focusedField, equals: .password)
+
+                            Label("Mínimo 6 caracteres", systemImage: password.count >= 6 ? "checkmark.circle.fill" : "circle")
+                                .font(.footnote)
+                                .foregroundStyle(password.count >= 6 ? Color.primaryColorGreen : Color.white.opacity(0.6))
+                        }
+
+                        // Rol
+                        HStack {
+                            Text("Selecciona tu rol:")
+                                .font(.appDescription)
+                            Spacer()
+                            Picker("Selecciona tu rol", selection: $selectedRole) {
+                                ForEach(UserRole.allCases) { role in
+                                    Text(role.displayName)
+                                        .tag(role)
                                 }
-                                .pickerStyle(.menu)
-                                .frame(width: 130)
                             }
-                            .padding()
-                            .frame(maxWidth: .infinity, maxHeight: 55)
-                            .background(.thirdColorWhite)
-                            .clipShape(.buttonBorder)
-                            
-                            // Sign in button
+                            .pickerStyle(.menu)
+                            .frame(width: 130)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, maxHeight: 55)
+                        .background(.thirdColorWhite)
+                        .clipShape(.buttonBorder)
+
+                        Button(action: submit) {
                             if isLoading {
                                 ProgressView()
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.thirdColorWhite)
-                                    .foregroundStyle(.secondaryColorBlack)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .tint(Color.secondaryColorBlack)
                             } else {
-                                CustomButtonView(title: "Registrar", color: .primaryColorGreen, textColor: .white) {
-                                    isLoading = true
-                                    Task {
-                                        let error = await viewModel.registerUser(
-                                            name: name,
-                                            email: email,
-                                            password: password,
-                                            rol: selectedRole.rawValue.lowercased()
-                                        )
-                                        
-                                        isLoading = false
-
-                                        if let error = error {
-                                            print("Error al registrar: \(error)")
-                                        } else {
-                                            print("Registro exitoso")
-                                        }
-                                    }
-                                }
+                                Text("Crear cuenta")
                             }
                         }
-                    } header: {
-                        HStack {
-                            Text("CREA TU CUENTA")
-                                .font(.appTitle)
-                                .foregroundStyle(.primaryColorGreen)
-                            Spacer()
-                        }
+                        .buttonStyle(BrandPrimaryButtonStyle())
+                        .disabled(isLoading)
                     }
-                    Spacer()
                 }
-                .padding()
+                .padding(.horizontal, 24)
+                .padding(.top, 8)
+                .padding(.bottom, 32)
             }
-            .alert("Mensaje", isPresented: $viewModel.showAlert) {
+            .scrollDismissesKeyboard(.interactively)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.secondaryColorBlack)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.white)
+                    }
+                    .accessibilityLabel(Text("Cerrar"))
+                }
+            }
+            .toolbarBackground(Color.secondaryColorBlack, for: .navigationBar)
+            .alert("Revisa tus datos", isPresented: $viewModel.showAlert) {
                 Button("OK") { }
             } message: {
                 Text(viewModel.message ?? "")
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.secondaryColorBlack)
+        }
+    }
+
+    private func submit() {
+        guard !isLoading else { return }
+        focusedField = nil
+        isLoading = true
+        Task {
+            // Si falla, el view model muestra la alerta con el motivo.
+            _ = await viewModel.registerUser(
+                name: name.trimmingCharacters(in: .whitespaces),
+                email: email.trimmingCharacters(in: .whitespaces),
+                password: password,
+                rol: selectedRole.rawValue.lowercased()
+            )
+            isLoading = false
         }
     }
 }

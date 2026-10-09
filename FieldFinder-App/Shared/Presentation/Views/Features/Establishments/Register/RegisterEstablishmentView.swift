@@ -156,7 +156,7 @@ struct RegisterEstablishmentView: View {
                         .foregroundStyle(.primaryColorGreen)
                 }
             }
-            .alert("Mensaje", isPresented: $showAlert) {
+            .alert("Aviso", isPresented: $showAlert) {
                 Button("OK") { }
             } message: {
                 Text(viewModel.alertMessage ?? "")

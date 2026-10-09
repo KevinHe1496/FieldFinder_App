@@ -28,7 +28,8 @@ final class UserAuthViewModel {
         
         isLoading = true
         message = nil
-        appState.status = .loading
+        // Sin cambiar appState.status aquí: si falla, el formulario sigue en pantalla
+        // y el usuario ve el error en una alerta.
       
         do {
             let result = try await useCase.registerUser(name: name, email: email, password: password, rol: rol)
@@ -42,21 +43,23 @@ final class UserAuthViewModel {
                     isLoading = false
                     return nil
                 } else {
-                    appState.status = .login
+                    // Ya quedó con sesión: .loaded cierra la hoja de registro.
+                    appState.status = .loaded
                     isLoading = false
                     return nil
                 }
                 
             } else {
-                appState.status = .error(error: "Nombre de usuario o contraseña incorrectos")
-           
                 isLoading = false
-                return "Nombre de usuario o contraseña incorrectos"
+                message = String(localized: "No pudimos crear tu cuenta. Revisa tus datos e inténtalo de nuevo.")
+                showAlert = true
+                return message
             }
         } catch {
-            appState.status = .error(error: "Algo salió mal")
             isLoading = false
-            return "Algo salió mal"
+            message = String(localized: "No pudimos crear tu cuenta. Puede que ese correo ya esté registrado o que no tengas conexión.")
+            showAlert = true
+            return message
         }
     }
     

@@ -352,3 +352,26 @@
 "Mis solicitudes" = "My requests";
 "Reclamar" = "Claim";
 "Enviar solicitud" = "Send request";
+
+/* UX quick wins (1.0.3) */
+"¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer." = "Are you sure you want to delete your account? This can't be undone.";
+"¿Eliminar esta cancha?" = "Delete this field?";
+"Los jugadores ya no la verán. Esta acción no se puede deshacer." = "Players won't see it anymore. This can't be undone.";
+"Cambios guardados" = "Changes saved";
+"Tu establecimiento se actualizó." = "Your venue was updated.";
+"Aviso" = "Notice";
+"Iniciar sesión" = "Log in";
+"Crear cuenta" = "Create account";
+"Guarda tus canchas favoritas o, si tienes una cancha, administra sus precios y fotos." = "Save your favorite fields or, if you own one, manage its prices and photos.";
+"No pudimos eliminar tu cuenta" = "We couldn't delete your account";
+"Revisa tu conexión e inténtalo de nuevo." = "Check your connection and try again.";
+"Inicia sesión" = "Log in";
+"Guarda tus canchas favoritas y administra la tuya si eres dueño." = "Save your favorite fields and manage yours if you're an owner.";
+"¿No tienes cuenta?" = "Don't have an account?";
+"Cerrar" = "Close";
+"No pudimos iniciar sesión" = "We couldn't log you in";
+"Crea tu cuenta" = "Create your account";
+"Mínimo 6 caracteres" = "At least 6 characters";
+"Revisa tus datos" = "Check your details";
+"No pudimos crear tu cuenta. Revisa tus datos e inténtalo de nuevo." = "We couldn't create your account. Check your details and try again.";
+"No pudimos crear tu cuenta. Puede que ese correo ya esté registrado o que no tengas conexión." = "We couldn't create your account. That email may already be registered, or you may be offline.";

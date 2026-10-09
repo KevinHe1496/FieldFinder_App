@@ -19,8 +19,10 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
            UNUserNotificationCenter.current().delegate = self
            Messaging.messaging().delegate = self
 
-           // Pedir permisos (async) y registrar APNs si procede
-           Task { await requestAuthorizationForPushNotificacion(application: application) }
+           // No pedimos permiso al abrir la app: se pide en un momento con sentido
+           // (p. ej. al enviar un reclamo, ver PushPermission). Si ya lo dio antes,
+           // solo volvemos a registrar el dispositivo en APNs.
+           Task { await PushPermission.registerIfAlreadyAuthorized() }
            return true
        }
 
@@ -35,24 +37,6 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
        func userNotificationCenter(_ center: UNUserNotificationCenter,
                                    didReceive response: UNNotificationResponse) async {
            // Navegación según payload si quieres (response.notification.request.content.userInfo)
-       }
-
-       private func requestAuthorizationForPushNotificacion(application: UIApplication) async {
-           do {
-               let granted = try await UNUserNotificationCenter.current()
-                   .requestAuthorization(options: [.alert, .badge, .sound])
-
-               print(granted ? "✅ Permiso concedido" : "❌ Permiso denegado")
-
-               if granted {
-                   // Importante: en el main thread
-                   await MainActor.run {
-                       application.registerForRemoteNotifications()
-                   }
-               }
-           } catch {
-               print("❌ Error solicitando notificaciones: \(error)")
-           }
        }
 
        // APNs OK → enlazar con FCM
@@ -71,6 +55,36 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
        func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
            print("📬 FCM token: \(fcmToken ?? "nil")")
        }
+}
+
+/// Pide permiso de notificaciones solo cuando el usuario entiende para qué sirve.
+enum PushPermission {
+    /// Muestra el diálogo del sistema si el usuario aún no decidió; si acepta, registra APNs.
+    static func requestIfNeeded() async {
+        let center = UNUserNotificationCenter.current()
+        let settings = await center.notificationSettings()
+        guard settings.authorizationStatus == .notDetermined else { return }
+
+        do {
+            let granted = try await center.requestAuthorization(options: [.alert, .badge, .sound])
+            if granted {
+                await MainActor.run { UIApplication.shared.registerForRemoteNotifications() }
+            }
+        } catch {
+            print("❌ Error solicitando notificaciones: \(error)")
+        }
+    }
+
+    /// Al abrir la app: si ya había dado permiso, registra el dispositivo sin preguntar.
+    static func registerIfAlreadyAuthorized() async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        switch settings.authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            await MainActor.run { UIApplication.shared.registerForRemoteNotifications() }
+        default:
+            break
+        }
+    }
 }
 
 //extension CustomAppDelegate: UNUserNotificationCenterDelegate {

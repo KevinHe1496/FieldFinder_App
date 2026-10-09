@@ -67,7 +67,7 @@ struct FavoritesView: View {
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
                         
-                        CustomButtonView(title: "Intentar denuevo.", color: .primaryColorGreen, textColor: .white) {
+                        CustomButtonView(title: "Intentar de nuevo", color: .primaryColorGreen, textColor: .white) {
                             Task {
                                 do {
                                     try await viewModel.getFavoritesUser()

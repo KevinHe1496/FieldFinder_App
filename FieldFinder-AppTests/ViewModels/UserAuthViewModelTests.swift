@@ -58,7 +58,9 @@ final class UserAuthViewModelTests: XCTestCase {
         // Act & Assert
         let result = await viewModel.registerUser(name: "Andy", email: "andy@hotmail.com", password: "123456", rol: "dueno")
         
-        XCTAssertEqual(result, "Algo salió mal")
+        XCTAssertNotNil(result)
+        XCTAssertTrue(viewModel.showAlert)
+        XCTAssertEqual(viewModel.message, result)
         XCTAssertFalse(viewModel.isLoading)
     }
     
