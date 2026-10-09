@@ -38,7 +38,10 @@ struct MapEstablishmentsView: View {
                                     Button {
                                         viewModel.selectEstablishment(establishment)
                                     } label: {
-                                        MapEstablishmentAnnotationView(establishment: establishment)
+                                        MapEstablishmentAnnotationView(
+                                            establishment: establishment,
+                                            isSelected: viewModel.selectedEstablishment?.id == establishment.id
+                                        )
                                     }
                                 }
                             }
@@ -57,13 +60,14 @@ struct MapEstablishmentsView: View {
                         } label: {
                             Image(systemName: "location.fill")
                                 .font(.system(size: 18, weight: .semibold))
-                                .foregroundStyle(.white)
-                                .padding(12)
-                                .background(Circle().fill(Color.primaryColorGreen))
-                                .shadow(radius: 4)
+                                .foregroundStyle(Color.secondaryColorBlack)
+                                .frame(width: 48, height: 48)
+                                .background(Circle().fill(Color.white))
+                                .shadow(color: .black.opacity(0.15), radius: 6, y: 2)
                         }
                         .padding(.trailing, 16)
                         .padding(.bottom, 24)
+                        .accessibilityLabel(Text("Centrar en mi ubicación"))
                     }
                     
                 case .error(let message):
@@ -109,7 +113,7 @@ struct MapEstablishmentsView: View {
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
             }
-            .navigationTitle("Establecimientos cercanos")
+            .navigationTitle("Mapa de canchas")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

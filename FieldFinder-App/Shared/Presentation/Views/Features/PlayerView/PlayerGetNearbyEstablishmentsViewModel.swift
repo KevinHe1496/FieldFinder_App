@@ -41,6 +41,26 @@ final class PlayerGetNearbyEstablishmentsViewModel: ObservableObject {
     
     var establishmentData = [EstablishmentResponse]()
     
+    /// Ubicación usada en la última búsqueda (la del usuario o una ciudad elegida). Sirve para mostrar distancias.
+    var userLocation: CLLocationCoordinate2D?
+    
+    /// Filtros rápidos activos en la lista (Sintética, Cubierta, Fútbol 5, Fútbol 7).
+    var activeFilters: Set<FieldFilter> = []
+    
+    func toggleFilter(_ filter: FieldFilter) {
+        if activeFilters.contains(filter) {
+            activeFilters.remove(filter)
+        } else {
+            activeFilters.insert(filter)
+        }
+    }
+    
+    /// Nombre de la ciudad elegida a mano; `nil` cuando se busca cerca del usuario.
+    var browsingCityName: String?
+    
+    /// Centro de Quito, para mostrar canchas cuando no hay ninguna cerca del usuario.
+    static let quitoCoordinate = CLLocationCoordinate2D(latitude: -0.1807, longitude: -78.4678)
+    
     var isFullyLoaded: Bool {
         switch (status, statusFavorites) {
         case (.success, .success):
@@ -51,14 +71,33 @@ final class PlayerGetNearbyEstablishmentsViewModel: ObservableObject {
     }
 
     
-    // Devuelve los establecimientos filtrados por nombre según lo que escribe el usuario.
+    // Establecimientos filtrados por texto (nombre o dirección) y por los filtros rápidos,
+    // ordenados del más cercano al más lejano.
     var filterEstablishments: [EstablishmentResponse] {
         guard let all = status.data else { return [] }
-        if establishmentSearch.isEmpty {
-            return all
-        } else {
-            return all.filter { $0.name.localizedStandardContains(establishmentSearch) }
+        
+        var result = all
+        let search = establishmentSearch.trimmingCharacters(in: .whitespaces)
+        if !search.isEmpty {
+            result = result.filter {
+                $0.name.localizedStandardContains(search) || $0.address.localizedStandardContains(search)
+            }
         }
+        if !activeFilters.isEmpty {
+            // Una cancha pasa si alguna de sus canchas cumple TODOS los filtros activos.
+            result = result.filter { establishment in
+                establishment.canchas.contains { field in
+                    activeFilters.allSatisfy { $0.matches(field) }
+                }
+            }
+        }
+        if let userLocation {
+            result.sort {
+                ($0.distanceKm(from: userLocation) ?? .greatestFiniteMagnitude) <
+                ($1.distanceKm(from: userLocation) ?? .greatestFiniteMagnitude)
+            }
+        }
+        return result
     }
     
     
@@ -91,12 +130,20 @@ final class PlayerGetNearbyEstablishmentsViewModel: ObservableObject {
     }
     
     // Carga los datos iniciales: obtiene ubicación, establecimientos y centra el mapa.
+    /// Carga canchas cerca del usuario, o cerca de `coordinate` si se pasa (p. ej. "Ver canchas en Quito").
     @MainActor
-    func loadData() async {
+    func loadData(near coordinate: CLLocationCoordinate2D? = nil, cityName: String? = nil) async {
         status = .loading
         do {
-            // 1. Pide ubicación
-            let coordinates = try await locationService.requestLocation()
+            // 1. Pide ubicación (o usa la ciudad elegida)
+            let coordinates: CLLocationCoordinate2D
+            if let coordinate {
+                coordinates = coordinate
+            } else {
+                coordinates = try await locationService.requestLocation()
+            }
+            self.userLocation = coordinates
+            self.browsingCityName = coordinate == nil ? nil : cityName
             
             // 2. Carga los establecimientos
             let establecimientos = try await useCase.fetchAllEstablishments(coordinate: coordinates)

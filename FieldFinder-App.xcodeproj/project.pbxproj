@@ -157,6 +157,8 @@
 		C9D4CA622DD7E6B200296604 /* EstablishmentFieldsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D4CA612DD7E6B200296604 /* EstablishmentFieldsSection.swift */; };
 		C9D4CA642DD7E6B700296604 /* EstablishmentMapSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D4CA632DD7E6B700296604 /* EstablishmentMapSection.swift */; };
 		C9E0D8432DE7DB2B006B398D /* UserAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E0D8422DE7DB2B006B398D /* UserAuthViewModel.swift */; };
+		A1627FC209D769A7875A7C41 /* EstablishmentResponse+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C0FB48EDE93F4E8047B9C22 /* EstablishmentResponse+Display.swift */; };
+		9D2DA6F5FB3919716E5257D6 /* BrandComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DE9CA1F7E3DFECBC5B7F81 /* BrandComponents.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -362,6 +364,8 @@
 		C9D4CA612DD7E6B200296604 /* EstablishmentFieldsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstablishmentFieldsSection.swift; sourceTree = "<group>"; };
 		C9D4CA632DD7E6B700296604 /* EstablishmentMapSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstablishmentMapSection.swift; sourceTree = "<group>"; };
 		C9E0D8422DE7DB2B006B398D /* UserAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuthViewModel.swift; sourceTree = "<group>"; };
+		0C0FB48EDE93F4E8047B9C22 /* EstablishmentResponse+Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EstablishmentResponse+Display.swift"; sourceTree = "<group>"; };
+		D4DE9CA1F7E3DFECBC5B7F81 /* BrandComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrandComponents.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -793,6 +797,7 @@
 		C92FD10A2DD2BA830008E2F9 /* ReusableUI */ = {
 			isa = PBXGroup;
 			children = (
+				D4DE9CA1F7E3DFECBC5B7F81 /* BrandComponents.swift */,
 				C9CBEEF12DEB5BDB002048C3 /* FullscreenImageView.swift */,
 				C92221B72DD3D84600D6BE8B /* FieldAttributesView.swift */,
 				C92FD10D2DD2BB570008E2F9 /* FavoriteButton.swift */,
@@ -919,6 +924,7 @@
 		C939BC6B2DCCF67600B98C16 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				0C0FB48EDE93F4E8047B9C22 /* EstablishmentResponse+Display.swift */,
 				BF1125B02DCFF10600A9DBE5 /* Data-extension.swift */,
 				C939BC802DCCF91600B98C16 /* Font-Theme.swift */,
 				C98B8BEC2DD4FEE8004F05A3 /* Establishment-coordinate.swift */,
@@ -1237,6 +1243,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D2DA6F5FB3919716E5257D6 /* BrandComponents.swift in Sources */,
+				A1627FC209D769A7875A7C41 /* EstablishmentResponse+Display.swift in Sources */,
 				BF93CBB42DD39E5A002A8627 /* EstablishmentServiceRepository.swift in Sources */,
 				BF03C62D2DD78E35005DB158 /* EditFieldView.swift in Sources */,
 				C98B8BF72DD530ED004F05A3 /* EditProfileView.swift in Sources */,

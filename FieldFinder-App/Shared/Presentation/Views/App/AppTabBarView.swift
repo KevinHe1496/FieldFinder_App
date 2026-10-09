@@ -37,7 +37,7 @@ struct AppTabBarView: View {
     var body: some View {
         TabView(selection: $tabSelection) {
             
-            Tab("Inicio", systemImage: "house.fill", value: tabSelection) {
+            Tab("Canchas", systemImage: "soccerball", value: tabSelection) {
                 PlayerView(viewModel: viewModel)
             }
             
