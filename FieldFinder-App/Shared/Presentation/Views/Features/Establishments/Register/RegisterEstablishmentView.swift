@@ -36,126 +36,82 @@ struct RegisterEstablishmentView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-            
                 VStack(alignment: .leading, spacing: 16) {
                     TipView(coverTip, arrowEdge: .bottom)
-                    CustomUIImage(selectedImagesData: $selectedImages)
-                        .padding(.bottom,8)
-                    
-                    //MARK: - Register Form
-                    
-                    CustomTextFieldLogin(titleKey: "Nombre", textField: $name, keyboardType: .default, prompt: Text("Nombre"), colorBackground: Color(.secondarySystemBackground))
-                        .autocorrectionDisabled(true)
-                    
-                    CustomTextFieldLogin(titleKey: "Información", textField: $info, keyboardType: .default, prompt: Text("Información"), colorBackground: Color(.secondarySystemBackground))
-                        
-                    
-                    CustomTextFieldLogin(titleKey: "Calle", textField: $address, keyboardType: .default, prompt: Text("Calle"), colorBackground: Color(.secondarySystemBackground))
-                        .autocorrectionDisabled(true)
-                    
-                    CustomTextFieldLogin(titleKey: "Calle 2", textField: $address2, keyboardType: .default, prompt: Text("Calle 2"), colorBackground: Color(.secondarySystemBackground))
-                    
-                    CustomTextFieldLogin(titleKey: "Teléfono", textField: $phone, keyboardType: .phonePad, prompt: Text("Teléfono"), colorBackground: Color(.secondarySystemBackground))
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Pon la ubicación del establecimiento")
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                            .padding(.horizontal)
-                        
-                        LocationPickerView(coordinates: $userCoordinates)
-                            .frame(height: 400)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.primary.opacity(0.2), lineWidth: 1)
-                            )
-                            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-                    }
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
 
-                    
-                    VStack {
-                        
-                        Toggle("Parqueadero", isOn: $parqueadero)
-                        Divider()
-                        Toggle("Vestidores", isOn: $vestidores)
-                        
-                        Divider()
-                        Toggle("Bar", isOn: $bar)
-                        
-                        Divider()
-                        Toggle("Baños", isOn: $banos)
-                        
-                        Divider()
-                        Toggle("Duchas", isOn: $duchas)
-                        
-                        
+                    BrandFormSection(title: "Fotos", footer: "La primera foto será la portada. Hasta 12.") {
+                        CustomUIImage(selectedImagesData: $selectedImages)
                     }
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    
-                    
-                    if viewModel.isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.primaryColorGreen)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                    } else {
-                        CustomButtonView(title: "Continuar", color: .primaryColorGreen, textColor: .white) {
-                            
-                            Task {
-                                try await viewModel.registerEstablishment(
-                                    name: name,
-                                    info: info,
-                                    address: address,
-                                    address2: address2,
-                                    parqueadero: parqueadero,
-                                    vestidores: vestidores,
-                                    bar: bar,
-                                    banos: banos,
-                                    duchas: duchas,
-                                    phone: phone,
-                                    images: selectedImages,
-                                    userCoordinates: userCoordinates
-                                )
-                                showAlert = true
-                            }
-                            
-                        }
-                        .sheet(isPresented: $showingStore) {
-                            StoreView()
-                                .environment(appState)
+
+                    BrandFormSection(title: "Datos de la cancha") {
+                        BrandTextField(title: "Nombre", text: $name, placeholder: "Ej.: Cancha Sintética La Vicentina")
+                            .autocorrectionDisabled(true)
+                        BrandTextField(title: "Descripción", text: $info,
+                                       placeholder: "Horarios, tipo de canchas, cómo reservar…",
+                                       axis: .vertical)
+                        BrandTextField(title: "Teléfono o WhatsApp", text: $phone,
+                                       placeholder: "099 123 4567", keyboard: .phonePad,
+                                       hint: "Si es celular, los jugadores te escribirán por WhatsApp.")
+                            .textContentType(.telephoneNumber)
+                    }
+
+                    BrandFormSection(title: "Ubicación", footer: "Mueve el mapa hasta que el pin quede sobre tu cancha.") {
+                        BrandTextField(title: "Calle principal", text: $address, placeholder: "Av. 6 de Diciembre")
+                            .autocorrectionDisabled(true)
+                        BrandTextField(title: "Intersección o referencia", text: $address2, placeholder: "y Av. Colón, junto al parque")
+                        LocationPickerView(coordinates: $userCoordinates)
+                            .frame(height: 260)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.brandBorder, lineWidth: 1))
+                    }
+
+                    BrandFormSection(title: "Servicios") {
+                        VStack(spacing: 4) {
+                            BrandToggleRow(title: "Parqueadero", systemImage: "car.fill", isOn: $parqueadero)
+                            BrandToggleRow(title: "Vestidores", systemImage: "tshirt.fill", isOn: $vestidores)
+                            BrandToggleRow(title: "Baños", systemImage: "toilet.fill", isOn: $banos)
+                            BrandToggleRow(title: "Duchas", systemImage: "shower.fill", isOn: $duchas)
+                            BrandToggleRow(title: "Bar", systemImage: "cup.and.saucer.fill", isOn: $bar)
                         }
                     }
-                    
+
+                    BrandSubmitButton(title: "Continuar", isLoading: viewModel.isLoading) {
+                        Task {
+                            try await viewModel.registerEstablishment(
+                                name: name,
+                                info: info,
+                                address: address,
+                                address2: address2,
+                                parqueadero: parqueadero,
+                                vestidores: vestidores,
+                                bar: bar,
+                                banos: banos,
+                                duchas: duchas,
+                                phone: phone,
+                                images: selectedImages,
+                                userCoordinates: userCoordinates
+                            )
+                            showAlert = true
+                        }
+                    }
+                    .sheet(isPresented: $showingStore) {
+                        StoreView()
+                            .environment(appState)
+                    }
                 }
-                .padding()
-                
+                .padding(16)
             }
+            .scrollDismissesKeyboard(.interactively)
+            .background(Color.brandBackground)
             .task {
-                // Configure and load your tips at app launch.
                 do {
                     try Tips.configure()
-                }
-                catch {
-                    // Handle TipKit errors
+                } catch {
                     print("Error initializing TipKit \(error.localizedDescription)")
                 }
             }
+            .navigationTitle("Registrar mi cancha")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("REGISTRAR PROPIEDAD")
-                        .font(.appTitle)
-                        .foregroundStyle(.primaryColorGreen)
-                }
-            }
             .alert("Aviso", isPresented: $showAlert) {
                 Button("OK") { }
             } message: {

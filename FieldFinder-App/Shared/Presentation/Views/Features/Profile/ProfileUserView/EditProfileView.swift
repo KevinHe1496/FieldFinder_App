@@ -19,43 +19,48 @@ struct EditProfileView: View {
         _name = State(initialValue: currentName)
     }
     
+    @State private var isSaving = false
+
     var body: some View {
-        Form {
-            Section(header: Text("Nombre")) {
-                TextField("Tu nombre", text: $name)
-            }
-            
-            Section {
-                Button("Guardar cambios") {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                BrandFormSection(title: "Tu perfil") {
+                    BrandTextField(title: "Nombre", text: $name, placeholder: "Cómo te llamas")
+                        .textContentType(.name)
+                }
+
+                BrandSubmitButton(title: "Guardar cambios", isLoading: isSaving,
+                                  isEnabled: !name.trimmingCharacters(in: .whitespaces).isEmpty) {
+                    isSaving = true
                     Task {
                         do {
-                            try await viewModel.updateUser(name: name)
+                            try await viewModel.updateUser(name: name.trimmingCharacters(in: .whitespaces))
                             showAlertSucess = true
                         } catch {
-                            errorMessage = "Algo salió mal. Intenta más tarde."
+                            errorMessage = String(localized: "Algo salió mal. Intenta más tarde.")
                             print("Error real:", error.localizedDescription)
                             showAlertError = true
                         }
+                        isSaving = false
                     }
                 }
-                .disabled(name.isEmpty)
             }
+            .padding(16)
         }
+        .background(Color.brandBackground)
         .navigationTitle("Editar perfil")
-        .alert("Editar mi perfil", isPresented: $showAlertSucess) {
+        .navigationBarTitleDisplayMode(.inline)
+        .alert("Cambios guardados", isPresented: $showAlertSucess) {
             Button("OK") {
                 dismiss()
             }
         } message: {
-            Text("Nombre de usuario cambiado exitosamente.")
+            Text("Tu nombre se actualizó.")
         }
-        
-        .alert("Error Editar mi perfil", isPresented: $showAlertError) {
-            Button("OK") {
-                
-            }
+        .alert("No se guardaron los cambios", isPresented: $showAlertError) {
+            Button("OK") { }
         } message: {
-            Text(errorMessage ?? "No se pudo actualizar tu nombre de usuario.")
+            Text(errorMessage ?? String(localized: "No se pudo actualizar tu nombre."))
         }
     }
 }

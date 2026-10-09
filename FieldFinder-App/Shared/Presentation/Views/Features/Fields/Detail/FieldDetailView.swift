@@ -63,7 +63,7 @@ struct FieldDetailView: View {
                     .padding()
                 }
             }
-            .navigationTitle("Detalle de Cancha")
+            .navigationTitle("Cancha")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 if case .success(let cancha) = viewModel.state, userRole == .dueno {
@@ -76,9 +76,9 @@ struct FieldDetailView: View {
                                 selectedCapacidad: Capacidad(
                                     rawValue: cancha.modalidad
                                 ) ?? .cinco,
-                                precio: String(
-                                    cancha.precio
-                                ),
+                                precio: cancha.precio.rounded() == cancha.precio
+                                    ? String(Int(cancha.precio))
+                                    : String(cancha.precio),
                                 iluminada: cancha.iluminada,
                                 cubierta: cancha.cubierta,
                                 canchaID: fieldId,

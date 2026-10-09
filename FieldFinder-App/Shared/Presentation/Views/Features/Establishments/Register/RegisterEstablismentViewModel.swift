@@ -10,6 +10,7 @@ final class RegisterEstablismentViewModel {
     var latitude: Double?
     var longitude: Double?
     var alertMessage: String?
+    var didSaveEdit = false
     var coordinatesFromMap = CLLocationCoordinate2D()
     var userLatitude = Double()
     var userLongitude = Double()
@@ -117,11 +118,12 @@ final class RegisterEstablismentViewModel {
           
             
             try await useCase.updateEstablishment(establishmentID: establishmentID, establishmentModel: newModel)
-            
-            
-            alertMessage = String(localized: "Establecimiento registrado con éxito.")
+            didSaveEdit = true
+            alertMessage = String(localized: "Tu establecimiento se actualizó.")
         } catch {
-            print("Error al registrar: \(error.localizedDescription)")
+            print("Error al editar: \(error.localizedDescription)")
+            didSaveEdit = false
+            alertMessage = String(localized: "No pudimos guardar los cambios. Revisa tu conexión e inténtalo de nuevo.")
             isLoading = false
         }
         

@@ -27,9 +27,9 @@ struct RegisterUserView: View {
     }
     
     @Environment(\.dismiss) private var dismiss
-    @FocusState private var focusedField: Field?
-
-    private enum Field { case name, email, password }
+    @FocusState private var nameFocused: Bool
+    @FocusState private var emailFocused: Bool
+    @FocusState private var passwordFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -51,75 +51,61 @@ struct RegisterUserView: View {
 
                     // MARK: - Formulario
                     VStack(spacing: 14) {
-                        CustomTextFieldLogin(
-                            titleKey: "Nombre",
-                            textField: $name,
-                            keyboardType: .default,
-                            prompt: Text("Nombre"),
-                            colorBackground: .thirdColorWhite
+                        BrandTextField(
+                            title: "Nombre",
+                            text: $name,
+                            placeholder: "Cómo te llamas",
+                            onDark: true,
+                            focus: $nameFocused
                         )
                         .textContentType(.name)
                         .autocorrectionDisabled(true)
                         .submitLabel(.next)
-                        .focused($focusedField, equals: .name)
-                        .onSubmit { focusedField = .email }
+                        .onSubmit { emailFocused = true }
 
-                        CustomTextFieldLogin(
-                            titleKey: "Email",
-                            textField: $email,
-                            keyboardType: .emailAddress,
-                            prompt: Text("Email"),
-                            colorBackground: .thirdColorWhite
+                        BrandTextField(
+                            title: "Correo",
+                            text: $email,
+                            placeholder: "tu@correo.com",
+                            keyboard: .emailAddress,
+                            onDark: true,
+                            focus: $emailFocused
                         )
                         .textContentType(.username)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled(true)
                         .submitLabel(.next)
-                        .focused($focusedField, equals: .email)
-                        .onSubmit { focusedField = .password }
+                        .onSubmit { passwordFocused = true }
 
                         VStack(alignment: .leading, spacing: 6) {
-                            CustomSecureFieldView(titleKey: "Contraseña", textField: $password, keyboardType: .default, prompt: Text("Contraseña"))
-                                .textContentType(.newPassword)
-                                .textInputAutocapitalization(.never)
-                                .autocorrectionDisabled(true)
-                                .submitLabel(.done)
-                                .focused($focusedField, equals: .password)
+                            BrandSecureField(
+                                title: "Contraseña",
+                                text: $password,
+                                onDark: true,
+                                focus: $passwordFocused
+                            )
+                            .textContentType(.newPassword)
+                            .submitLabel(.done)
 
                             Label("Mínimo 6 caracteres", systemImage: password.count >= 6 ? "checkmark.circle.fill" : "circle")
                                 .font(.footnote)
                                 .foregroundStyle(password.count >= 6 ? Color.primaryColorGreen : Color.white.opacity(0.6))
                         }
 
-                        // Rol
-                        HStack {
-                            Text("Selecciona tu rol:")
-                                .font(.appDescription)
-                            Spacer()
-                            Picker("Selecciona tu rol", selection: $selectedRole) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            BrandFieldLabel(title: "¿Cómo usarás la app?", onDark: true)
+                            HStack(spacing: 8) {
                                 ForEach(UserRole.allCases) { role in
-                                    Text(role.displayName)
-                                        .tag(role)
+                                    BrandFilterChip(title: role == .jugador ? String(localized: "Quiero jugar") : String(localized: "Tengo una cancha"),
+                                                    isSelected: selectedRole == role) {
+                                        selectedRole = role
+                                    }
                                 }
                             }
-                            .pickerStyle(.menu)
-                            .frame(width: 130)
                         }
-                        .padding()
-                        .frame(maxWidth: .infinity, maxHeight: 55)
-                        .background(.thirdColorWhite)
-                        .clipShape(.buttonBorder)
 
-                        Button(action: submit) {
-                            if isLoading {
-                                ProgressView()
-                                    .tint(Color.secondaryColorBlack)
-                            } else {
-                                Text("Crear cuenta")
-                            }
-                        }
-                        .buttonStyle(BrandPrimaryButtonStyle())
-                        .disabled(isLoading)
+                        BrandSubmitButton(title: "Crear cuenta", isLoading: isLoading, action: submit)
+                            .padding(.top, 4)
                     }
                 }
                 .padding(.horizontal, 24)
@@ -152,7 +138,9 @@ struct RegisterUserView: View {
 
     private func submit() {
         guard !isLoading else { return }
-        focusedField = nil
+        nameFocused = false
+        emailFocused = false
+        passwordFocused = false
         isLoading = true
         Task {
             // Si falla, el view model muestra la alerta con el motivo.

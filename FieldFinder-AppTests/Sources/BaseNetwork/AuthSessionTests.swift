@@ -139,6 +139,17 @@ final class EstablishmentDisplayTests: XCTestCase {
         XCTAssertNil(establishment(phone: "").whatsAppNumber)
     }
 
+    func test_WhatsAppNumber_LandlineHasNoWhatsApp() {
+        XCTAssertNil(establishment(phone: "02 234 5678").whatsAppNumber)
+        XCTAssertNil(establishment(phone: "+593 2 234 5678").whatsAppNumber)
+        XCTAssertNil(establishment(phone: "(04) 256-7890").whatsAppNumber)
+    }
+
+    func test_CapacidadDisplayName() {
+        XCTAssertEqual(Capacidad.cinco.displayName, "Fútbol 5")
+        XCTAssertEqual(Capacidad.once.displayName, "Fútbol 11")
+    }
+
     func test_MinPrice_IgnoresZero() {
         let est = establishment(phone: "", canchas: [
             field(tipo: "Sintético", modalidad: "7v7", precio: 0),

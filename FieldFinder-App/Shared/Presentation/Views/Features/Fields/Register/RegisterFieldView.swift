@@ -29,95 +29,55 @@ struct RegisterFieldView: View {
 
     var body: some View {
         ScrollView {
-            Text("REGISTRAR CANCHA")
-                .font(.appTitle)
-                .foregroundStyle(.primaryColorGreen)
-            
             VStack(alignment: .leading, spacing: 16) {
-                
+                Text("Agregar cancha")
+                    .font(.system(size: 28, weight: .heavy))
+                    .foregroundStyle(Color.brandInk)
+
                 TipView(coverTip, arrowEdge: .bottom)
-                CustomUIImage(selectedImagesData: $selectedImages)
-                
-                VStack {
-                    HStack {
-                        Text("Cancha")
-                        Spacer()
-                        Picker("Selecciona la cancha", selection: $selectedField) {
-                            ForEach(Field.allCases) { cancha in
-                                Text(cancha.displayName).tag(cancha)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                    }
-                    
-                    Divider()
-                    
-                    HStack {
-                        Text("Capacidad")
-                        Spacer()
-                        Picker("Selecciona modalidad", selection: $selectedCapacidad) {
-                            ForEach(Capacidad.allCases) { capacidad in
-                                Text(capacidad.rawValue).tag(capacidad)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                    }
-                    
-                    Divider()
-                    Toggle("Iluminada", isOn: $iluminada)
-                    Divider()
-                    Toggle("Cubierta", isOn: $cubierta)
+
+                BrandFormSection(title: "Fotos", footer: "Sube al menos una foto de esta cancha.") {
+                    CustomUIImage(selectedImagesData: $selectedImages)
                 }
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                
-                // MARK: PRECIO
-                HStack {
-                    Text("Precio por hora")
-                    Spacer()
-                    HStack {
-                        Text(viewModel.localCurrencySymbol())
-                            .foregroundStyle(.secondary)
-                        TextField("0.00", text: $precio)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
+
+                BrandFormSection(title: "Cancha") {
+                    BrandChoiceField(title: "Tipo de césped", options: Field.allCases,
+                                     selection: $selectedField) { $0.displayName }
+                    BrandChoiceField(title: "Tamaño", options: Capacidad.allCases,
+                                     selection: $selectedCapacidad) { $0.displayName }
+                    VStack(spacing: 4) {
+                        BrandToggleRow(title: "Iluminada", systemImage: "lightbulb.fill", isOn: $iluminada)
+                        BrandToggleRow(title: "Cubierta", systemImage: "house.fill", isOn: $cubierta)
                     }
                 }
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                
-                if viewModel.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.primaryColorGreen)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                } else {
-                    CustomButtonView(title: "Registrar", color: .primaryColorGreen, textColor: .white) {
-                        Task {
-                            let newModel = FieldRequest(
-                                tipo: selectedField.rawValue,
-                                modalidad: selectedCapacidad.rawValue,
-                                precio: Double(precio) ?? 0,
-                                iluminada: iluminada,
-                                cubierta: cubierta,
-                                establecimientoID: establecimientoID
-                            )
-                            
-                            await viewModel.registerCancha(
-                                newModel,
-                                images: selectedImages,
-                                establishmentID: establecimientoID
-                            )
-                            
-                            showAlert = true
-                        }
+
+                BrandFormSection(title: "Precio") {
+                    BrandPriceField(title: "Precio por hora", text: $precio,
+                                    currencySymbol: viewModel.localCurrencySymbol())
+                }
+
+                BrandSubmitButton(title: "Guardar cancha", isLoading: viewModel.isLoading) {
+                    Task {
+                        let newModel = FieldRequest(
+                            tipo: selectedField.rawValue,
+                            modalidad: selectedCapacidad.rawValue,
+                            precio: Double(precio.replacingOccurrences(of: ",", with: ".")) ?? 0,
+                            iluminada: iluminada,
+                            cubierta: cubierta,
+                            establecimientoID: establecimientoID
+                        )
+
+                        await viewModel.registerCancha(
+                            newModel,
+                            images: selectedImages,
+                            establishmentID: establecimientoID
+                        )
+
+                        showAlert = true
                     }
                 }
             }
+            .padding(16)
             .task {
                 do {
                     try Tips.configure()
@@ -125,7 +85,6 @@ struct RegisterFieldView: View {
                     print("Error initializing TipKit \(error.localizedDescription)")
                 }
             }
-            .padding()
             .alert("Aviso", isPresented: $showAlert) {
                 if viewModel.shouldDismissAfterAlert {
                     Button("OK") { dismiss() }
@@ -134,6 +93,8 @@ struct RegisterFieldView: View {
                 Text(viewModel.alertMessage ?? "")
             }
         }
+        .scrollDismissesKeyboard(.interactively)
+        .background(Color.brandBackground)
     }
 }
 

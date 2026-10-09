@@ -231,3 +231,247 @@ struct EstablishmentCardRow: View {
     .padding()
     .background(Color.brandBackground)
 }
+
+// MARK: - Formularios
+//
+// Patrón único para todos los formularios de la app:
+// etiqueta arriba, caja blanca con borde gris (verde al escribir), secciones en tarjetas.
+
+/// Etiqueta que va encima de cada campo.
+struct BrandFieldLabel: View {
+    let title: LocalizedStringKey
+    var onDark: Bool = false
+
+    var body: some View {
+        Text(title)
+            .font(.system(size: 14, weight: .semibold))
+            .foregroundStyle(onDark ? Color.white.opacity(0.85) : Color.brandInk)
+    }
+}
+
+/// Caja común de los campos: fondo de tarjeta, borde gris y borde verde cuando está activo.
+private struct BrandFieldBox: ViewModifier {
+    let isFocused: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: 16))
+            .foregroundStyle(Color.brandInk)
+            .tint(Color.brandDeepGreen)
+            .padding(.horizontal, 14)
+            .frame(minHeight: 52)
+            .background(Color.brandCard, in: RoundedRectangle(cornerRadius: 14))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(isFocused ? Color.primaryColorGreen : Color.brandBorder,
+                            lineWidth: isFocused ? 2 : 1)
+            )
+    }
+}
+
+/// Campo de texto con etiqueta. `axis: .vertical` lo vuelve de varias líneas.
+struct BrandTextField: View {
+    let title: LocalizedStringKey
+    @Binding var text: String
+    var placeholder: LocalizedStringKey = ""
+    var keyboard: UIKeyboardType = .default
+    var axis: Axis = .horizontal
+    var hint: LocalizedStringKey? = nil
+    var onDark: Bool = false
+    /// Para pasar al siguiente campo con el botón del teclado; si no se da, usa uno interno.
+    var focus: FocusState<Bool>.Binding? = nil
+
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            BrandFieldLabel(title: title, onDark: onDark)
+            TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color.brandTextSecondary), axis: axis)
+                .keyboardType(keyboard)
+                .lineLimit(axis == .vertical ? 3...6 : 1...1)
+                .padding(.vertical, axis == .vertical ? 14 : 0)
+                .focused(focus ?? $isFocused)
+                .modifier(BrandFieldBox(isFocused: focus?.wrappedValue ?? isFocused))
+                .accessibilityLabel(Text(title))
+            if let hint {
+                Text(hint)
+                    .font(.system(size: 13))
+                    .foregroundStyle(onDark ? Color.white.opacity(0.6) : Color.brandTextSecondary)
+            }
+        }
+    }
+}
+
+/// Contraseña con etiqueta y botón para mostrarla.
+struct BrandSecureField: View {
+    let title: LocalizedStringKey
+    @Binding var text: String
+    var placeholder: LocalizedStringKey = ""
+    var onDark: Bool = false
+    var focus: FocusState<Bool>.Binding? = nil
+
+    @State private var isVisible = false
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            BrandFieldLabel(title: title, onDark: onDark)
+            HStack(spacing: 8) {
+                Group {
+                    if isVisible {
+                        TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color.brandTextSecondary))
+                    } else {
+                        SecureField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color.brandTextSecondary))
+                    }
+                }
+                .focused(focus ?? $isFocused)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
+                .accessibilityLabel(Text(title))
+
+                Button {
+                    isVisible.toggle()
+                } label: {
+                    Image(systemName: isVisible ? "eye.slash" : "eye")
+                        .foregroundStyle(Color.brandTextSecondary)
+                        .frame(width: 32, height: 32)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(isVisible ? Text("Ocultar contraseña") : Text("Mostrar contraseña"))
+            }
+            .modifier(BrandFieldBox(isFocused: focus?.wrappedValue ?? isFocused))
+        }
+    }
+}
+
+/// Precio por hora: "$" fijo y teclado numérico.
+struct BrandPriceField: View {
+    let title: LocalizedStringKey
+    @Binding var text: String
+    var currencySymbol: String = "$"
+
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            BrandFieldLabel(title: title)
+            HStack(spacing: 6) {
+                Text(currencySymbol)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Color.brandTextSecondary)
+                TextField("", text: $text, prompt: Text("35").foregroundStyle(Color.brandTextSecondary))
+                    .keyboardType(.decimalPad)
+                    .focused($isFocused)
+                    .accessibilityLabel(Text(title))
+                Text("por hora")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.brandTextSecondary)
+            }
+            .modifier(BrandFieldBox(isFocused: isFocused))
+        }
+    }
+}
+
+/// Elegir una opción entre pocas (tipo de césped, tamaño) con chips.
+struct BrandChoiceField<Option: Hashable>: View {
+    let title: LocalizedStringKey
+    let options: [Option]
+    @Binding var selection: Option
+    let label: (Option) -> String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            BrandFieldLabel(title: title)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(options, id: \.self) { option in
+                        BrandFilterChip(title: label(option), isSelected: option == selection) {
+                            selection = option
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Interruptor con ícono, para servicios (parqueadero, duchas…) y atributos de la cancha.
+struct BrandToggleRow: View {
+    let title: LocalizedStringKey
+    let systemImage: String
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Toggle(isOn: $isOn) {
+            Label {
+                Text(title)
+                    .font(.system(size: 16))
+                    .foregroundStyle(Color.brandInk)
+            } icon: {
+                Image(systemName: systemImage)
+                    .foregroundStyle(Color.brandDeepGreen)
+            }
+        }
+        .tint(Color.primaryColorGreen)
+        .frame(minHeight: 44)
+    }
+}
+
+/// Tarjeta que agrupa campos relacionados, con título y nota opcional.
+struct BrandFormSection<Content: View>: View {
+    let title: LocalizedStringKey
+    var footer: LocalizedStringKey? = nil
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text(title)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundStyle(Color.brandInk)
+            content
+            if let footer {
+                Text(footer)
+                    .font(.system(size: 13))
+                    .foregroundStyle(Color.brandTextSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.brandCard, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.brandBorder, lineWidth: 1))
+    }
+}
+
+/// Botón principal de un formulario: verde, con spinner mientras guarda.
+struct BrandSubmitButton: View {
+    let title: LocalizedStringKey
+    var isLoading: Bool = false
+    var isEnabled: Bool = true
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            if isLoading {
+                ProgressView().tint(Color.secondaryColorBlack)
+            } else {
+                Text(title)
+            }
+        }
+        .buttonStyle(BrandPrimaryButtonStyle())
+        .disabled(isLoading || !isEnabled)
+        .opacity(isEnabled ? 1 : 0.5)
+    }
+}
+
+extension Capacidad {
+    /// "Fútbol 5" en vez de "5-5".
+    var displayName: String {
+        switch self {
+        case .cinco: return String(localized: "Fútbol 5")
+        case .siete: return String(localized: "Fútbol 7")
+        case .nueve: return String(localized: "Fútbol 9")
+        case .once: return String(localized: "Fútbol 11")
+        }
+    }
+}
