@@ -157,6 +157,14 @@
 		C9D4CA622DD7E6B200296604 /* EstablishmentFieldsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D4CA612DD7E6B200296604 /* EstablishmentFieldsSection.swift */; };
 		C9D4CA642DD7E6B700296604 /* EstablishmentMapSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D4CA632DD7E6B700296604 /* EstablishmentMapSection.swift */; };
 		C9E0D8432DE7DB2B006B398D /* UserAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E0D8422DE7DB2B006B398D /* UserAuthViewModel.swift */; };
+		FB7CA77A7B0870581D98723A /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0515C955DBA6413D416425B /* AuthSession.swift */; };
+		95E7605F74DEF2EB2B9110EB /* ClaimService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC59DDEC87CF810CF718193 /* ClaimService.swift */; };
+		AF0CE8D296345D6A7752F2A8 /* ClaimModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE9C8666A208DE8D49862A /* ClaimModels.swift */; };
+		7B1C03319220746F2092A3A4 /* ClaimEstablishmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A179F20ADFE385CD9AE8AA2 /* ClaimEstablishmentViewModel.swift */; };
+		F10E955682800A8B43DAE76B /* ClaimEstablishmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A3B942605C36D658BE53D /* ClaimEstablishmentView.swift */; };
+		CFF75A30DC1C7CDBC6F64A8C /* MyClaimsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C398D1E2E3B13689C52DB85A /* MyClaimsView.swift */; };
+		4502081E65BA64736715D658 /* ClaimBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E20A07F0ED7EE858ED759C /* ClaimBannerView.swift */; };
+		5E47C908E1383B9247D5F4CB /* AuthSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164F9719BC27D037888A3D87 /* AuthSessionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -362,6 +370,14 @@
 		C9D4CA612DD7E6B200296604 /* EstablishmentFieldsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstablishmentFieldsSection.swift; sourceTree = "<group>"; };
 		C9D4CA632DD7E6B700296604 /* EstablishmentMapSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstablishmentMapSection.swift; sourceTree = "<group>"; };
 		C9E0D8422DE7DB2B006B398D /* UserAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuthViewModel.swift; sourceTree = "<group>"; };
+		D0515C955DBA6413D416425B /* AuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
+		3DC59DDEC87CF810CF718193 /* ClaimService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimService.swift; sourceTree = "<group>"; };
+		68BE9C8666A208DE8D49862A /* ClaimModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimModels.swift; sourceTree = "<group>"; };
+		1A179F20ADFE385CD9AE8AA2 /* ClaimEstablishmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimEstablishmentViewModel.swift; sourceTree = "<group>"; };
+		F46A3B942605C36D658BE53D /* ClaimEstablishmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimEstablishmentView.swift; sourceTree = "<group>"; };
+		C398D1E2E3B13689C52DB85A /* MyClaimsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyClaimsView.swift; sourceTree = "<group>"; };
+		D5E20A07F0ED7EE858ED759C /* ClaimBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimBannerView.swift; sourceTree = "<group>"; };
+		164F9719BC27D037888A3D87 /* AuthSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSessionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -522,6 +538,7 @@
 		BF44DEB82DEF844F003D7824 /* BaseNetwork */ = {
 			isa = PBXGroup;
 			children = (
+				164F9719BC27D037888A3D87 /* AuthSessionTests.swift */,
 				BF44DEB92DEF847B003D7824 /* EndpointsTests.swift */,
 				BF44DEBB2DEF84AA003D7824 /* HttpMethodsTests.swift */,
 				BF44DEBD2DEF8516003D7824 /* HttpResponseCodesTests.swift */,
@@ -582,6 +599,7 @@
 		BF5614AD2DCE7095003C1F66 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				68BE9C8666A208DE8D49862A /* ClaimModels.swift */,
 				BF784DAE2DDE6BA900B2B2E6 /* Enums.swift */,
 				BF784DB02DDE6CD400B2B2E6 /* UserModels.swift */,
 				C95C5D0B2DD8F7E000A5310C /* CoverImageTip.swift */,
@@ -667,6 +685,7 @@
 		BFA9DC3A2DE506CC0016AA2C /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				D5B45837958301AE58F08431 /* Claims */,
 				C939BC6E2DCCF6AB00B98C16 /* Auth */,
 				BFA9DC2A2DE4F5A50016AA2C /* Profile */,
 				C9C7BAB92DCE8A92007CB3FA /* Favorites */,
@@ -889,6 +908,8 @@
 		C939BC632DCCF61E00B98C16 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				D0515C955DBA6413D416425B /* AuthSession.swift */,
+				3DC59DDEC87CF810CF718193 /* ClaimService.swift */,
 				C939BC652DCCF62E00B98C16 /* Local */,
 				BF5614AE2DCE70C3003C1F66 /* BaseNetwork */,
 				BF1471CE2DD646E4008C1E09 /* FieldService.swift */,
@@ -1079,6 +1100,17 @@
 			path = EstablishmentComponentsUI;
 			sourceTree = "<group>";
 		};
+		D5B45837958301AE58F08431 /* Claims */ = {
+			isa = PBXGroup;
+			children = (
+				1A179F20ADFE385CD9AE8AA2 /* ClaimEstablishmentViewModel.swift */,
+				F46A3B942605C36D658BE53D /* ClaimEstablishmentView.swift */,
+				C398D1E2E3B13689C52DB85A /* MyClaimsView.swift */,
+				D5E20A07F0ED7EE858ED759C /* ClaimBannerView.swift */,
+			);
+			path = Claims;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1237,6 +1269,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB7CA77A7B0870581D98723A /* AuthSession.swift in Sources */,
+				95E7605F74DEF2EB2B9110EB /* ClaimService.swift in Sources */,
+				AF0CE8D296345D6A7752F2A8 /* ClaimModels.swift in Sources */,
+				7B1C03319220746F2092A3A4 /* ClaimEstablishmentViewModel.swift in Sources */,
+				F10E955682800A8B43DAE76B /* ClaimEstablishmentView.swift in Sources */,
+				CFF75A30DC1C7CDBC6F64A8C /* MyClaimsView.swift in Sources */,
+				4502081E65BA64736715D658 /* ClaimBannerView.swift in Sources */,
 				BF93CBB42DD39E5A002A8627 /* EstablishmentServiceRepository.swift in Sources */,
 				BF03C62D2DD78E35005DB158 /* EditFieldView.swift in Sources */,
 				C98B8BF72DD530ED004F05A3 /* EditProfileView.swift in Sources */,
@@ -1345,6 +1384,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E47C908E1383B9247D5F4CB /* AuthSessionTests.swift in Sources */,
 				BF44DE922DEF83B6003D7824 /* MockData.swift in Sources */,
 				BF44DE932DEF83B6003D7824 /* URLProtocolStub.swift in Sources */,
 				BF44DE942DEF83B6003D7824 /* MockAuthService.swift in Sources */,
