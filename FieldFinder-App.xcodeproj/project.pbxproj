@@ -159,6 +159,14 @@
 		C9E0D8432DE7DB2B006B398D /* UserAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E0D8422DE7DB2B006B398D /* UserAuthViewModel.swift */; };
 		A1627FC209D769A7875A7C41 /* EstablishmentResponse+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C0FB48EDE93F4E8047B9C22 /* EstablishmentResponse+Display.swift */; };
 		9D2DA6F5FB3919716E5257D6 /* BrandComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DE9CA1F7E3DFECBC5B7F81 /* BrandComponents.swift */; };
+		3E94F497E4C9868CE5FBD56C /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08DBCFC3E5A34334677F82 /* AuthSession.swift */; };
+		A91BC276D82651E5A65846FC /* ClaimService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134178A01D0BAA4E60042D6B /* ClaimService.swift */; };
+		4AE3DF90C3865060E13D6F1F /* ClaimModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D543B8E1B2F625168E85566 /* ClaimModels.swift */; };
+		2F3ECD14E5A6435BE58B0F2A /* ClaimEstablishmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E548161BD1231CDFB0B026 /* ClaimEstablishmentViewModel.swift */; };
+		BD2FC3DC2C57458DEE97388D /* ClaimEstablishmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBDE694DB36C8A96F1E39BE /* ClaimEstablishmentView.swift */; };
+		EB74AB4816C397F0EC3564FE /* MyClaimsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872BFCD7810DCE7ACC2EF50 /* MyClaimsView.swift */; };
+		D549CF02EDCCDE209E055139 /* ClaimBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ABED959340D1A804DC479E /* ClaimBannerView.swift */; };
+		E2EAF5B5DF4D258A41DACB31 /* AuthSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C1E5F807384146FA3449C66 /* AuthSessionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -366,6 +374,14 @@
 		C9E0D8422DE7DB2B006B398D /* UserAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuthViewModel.swift; sourceTree = "<group>"; };
 		0C0FB48EDE93F4E8047B9C22 /* EstablishmentResponse+Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EstablishmentResponse+Display.swift"; sourceTree = "<group>"; };
 		D4DE9CA1F7E3DFECBC5B7F81 /* BrandComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrandComponents.swift"; sourceTree = "<group>"; };
+		9D08DBCFC3E5A34334677F82 /* AuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
+		134178A01D0BAA4E60042D6B /* ClaimService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimService.swift; sourceTree = "<group>"; };
+		1D543B8E1B2F625168E85566 /* ClaimModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimModels.swift; sourceTree = "<group>"; };
+		11E548161BD1231CDFB0B026 /* ClaimEstablishmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimEstablishmentViewModel.swift; sourceTree = "<group>"; };
+		DBBDE694DB36C8A96F1E39BE /* ClaimEstablishmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimEstablishmentView.swift; sourceTree = "<group>"; };
+		4872BFCD7810DCE7ACC2EF50 /* MyClaimsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyClaimsView.swift; sourceTree = "<group>"; };
+		29ABED959340D1A804DC479E /* ClaimBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimBannerView.swift; sourceTree = "<group>"; };
+		3C1E5F807384146FA3449C66 /* AuthSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSessionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -526,6 +542,7 @@
 		BF44DEB82DEF844F003D7824 /* BaseNetwork */ = {
 			isa = PBXGroup;
 			children = (
+				3C1E5F807384146FA3449C66 /* AuthSessionTests.swift */,
 				BF44DEB92DEF847B003D7824 /* EndpointsTests.swift */,
 				BF44DEBB2DEF84AA003D7824 /* HttpMethodsTests.swift */,
 				BF44DEBD2DEF8516003D7824 /* HttpResponseCodesTests.swift */,
@@ -586,6 +603,7 @@
 		BF5614AD2DCE7095003C1F66 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				1D543B8E1B2F625168E85566 /* ClaimModels.swift */,
 				BF784DAE2DDE6BA900B2B2E6 /* Enums.swift */,
 				BF784DB02DDE6CD400B2B2E6 /* UserModels.swift */,
 				C95C5D0B2DD8F7E000A5310C /* CoverImageTip.swift */,
@@ -671,6 +689,7 @@
 		BFA9DC3A2DE506CC0016AA2C /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				72F8AFE27235081BF38DC158 /* Claims */,
 				C939BC6E2DCCF6AB00B98C16 /* Auth */,
 				BFA9DC2A2DE4F5A50016AA2C /* Profile */,
 				C9C7BAB92DCE8A92007CB3FA /* Favorites */,
@@ -894,6 +913,8 @@
 		C939BC632DCCF61E00B98C16 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				9D08DBCFC3E5A34334677F82 /* AuthSession.swift */,
+				134178A01D0BAA4E60042D6B /* ClaimService.swift */,
 				C939BC652DCCF62E00B98C16 /* Local */,
 				BF5614AE2DCE70C3003C1F66 /* BaseNetwork */,
 				BF1471CE2DD646E4008C1E09 /* FieldService.swift */,
@@ -1085,6 +1106,17 @@
 			path = EstablishmentComponentsUI;
 			sourceTree = "<group>";
 		};
+		72F8AFE27235081BF38DC158 /* Claims */ = {
+			isa = PBXGroup;
+			children = (
+				11E548161BD1231CDFB0B026 /* ClaimEstablishmentViewModel.swift */,
+				DBBDE694DB36C8A96F1E39BE /* ClaimEstablishmentView.swift */,
+				4872BFCD7810DCE7ACC2EF50 /* MyClaimsView.swift */,
+				29ABED959340D1A804DC479E /* ClaimBannerView.swift */,
+			);
+			path = Claims;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1243,6 +1275,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E94F497E4C9868CE5FBD56C /* AuthSession.swift in Sources */,
+				A91BC276D82651E5A65846FC /* ClaimService.swift in Sources */,
+				4AE3DF90C3865060E13D6F1F /* ClaimModels.swift in Sources */,
+				2F3ECD14E5A6435BE58B0F2A /* ClaimEstablishmentViewModel.swift in Sources */,
+				BD2FC3DC2C57458DEE97388D /* ClaimEstablishmentView.swift in Sources */,
+				EB74AB4816C397F0EC3564FE /* MyClaimsView.swift in Sources */,
+				D549CF02EDCCDE209E055139 /* ClaimBannerView.swift in Sources */,
 				9D2DA6F5FB3919716E5257D6 /* BrandComponents.swift in Sources */,
 				A1627FC209D769A7875A7C41 /* EstablishmentResponse+Display.swift in Sources */,
 				BF93CBB42DD39E5A002A8627 /* EstablishmentServiceRepository.swift in Sources */,
@@ -1353,6 +1392,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2EAF5B5DF4D258A41DACB31 /* AuthSessionTests.swift in Sources */,
 				BF44DE922DEF83B6003D7824 /* MockData.swift in Sources */,
 				BF44DE932DEF83B6003D7824 /* URLProtocolStub.swift in Sources */,
 				BF44DE942DEF83B6003D7824 /* MockAuthService.swift in Sources */,
@@ -1555,7 +1595,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "FieldFinder-App/FieldFinder-App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = L5MH9KP95U;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1574,7 +1614,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ravecodesolutions.fieldfinder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1595,7 +1635,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "FieldFinder-App/FieldFinder-App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = L5MH9KP95U;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1614,7 +1654,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ravecodesolutions.fieldfinder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
