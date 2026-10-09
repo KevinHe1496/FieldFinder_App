@@ -35,7 +35,7 @@ final class EstablishmentService: EstablishmentServiceProtocol {
         
         request.httpBody = try JSONEncoder().encode(establishmentModel)
         
-        let (data, response) = try await session.data(for: request)
+        let (data, response) = try await session.ffData(for: request)
         
         // 6. Verificar que la respuesta es válida y fue exitosa
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -95,7 +95,7 @@ final class EstablishmentService: EstablishmentServiceProtocol {
         request.httpBody = body
         
         do {
-            let (data, response) = try await session.data(for: request)
+            let (data, response) = try await session.ffData(for: request)
             
             guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
                 let serverMessage = String(data: data, encoding: .utf8) ?? "Sin mensaje del servidor"
@@ -129,7 +129,7 @@ final class EstablishmentService: EstablishmentServiceProtocol {
         
         request.httpBody = try JSONEncoder().encode(establishmentModel)
         
-        let (_, response) = try await session.data(for: request)
+        let (_, response) = try await session.ffData(for: request)
         
         
         guard let httpResponse = response as? HTTPURLResponse,
@@ -151,7 +151,7 @@ final class EstablishmentService: EstablishmentServiceProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = HttpMethods.get
         
-        let (data, response) = try await session.data(for: request)
+        let (data, response) = try await session.ffData(for: request)
         
         // Verifica que la respuesta sea válida y del tipo HTTPURLResponse.
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -189,7 +189,7 @@ final class EstablishmentService: EstablishmentServiceProtocol {
         request.setValue(HttpHeader.content, forHTTPHeaderField: HttpHeader.contentTypeID)
         request.httpBody = jsonData
         
-        let (data, response) = try await session.data(for: request)
+        let (data, response) = try await session.ffData(for: request)
         
         guard let res = response as? HTTPURLResponse, res.statusCode == HttpResponseCodes.SUCCESS else {
             throw FFError.errorFromApi(statusCode: -1)
@@ -219,7 +219,7 @@ final class EstablishmentService: EstablishmentServiceProtocol {
         request.setValue("\(HttpHeader.bearer) \(tokenJWT)", forHTTPHeaderField: HttpHeader.authorization)
         
         do {
-            let (_, response) = try await session.data(for: request)
+            let (_, response) = try await session.ffData(for: request)
             
             guard let httpResponse = response as? HTTPURLResponse,
                   200..<300 ~= httpResponse.statusCode else {

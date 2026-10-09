@@ -48,24 +48,28 @@ struct EstablishmentInfoSection: View {
                 }
                 .buttonStyle(.plain)
                 
-                Button {
-                    onCallTap()
-                } label: {
-                    HStack {
-                        Image(systemName: "phone.fill")
-                            .foregroundStyle(.primaryColorGreen)
-                        Text(establishment.phone)
-                            .underline()
+                // Los establecimientos importados de Google Maps no tienen teléfono ni descripción.
+                if !establishment.phone.isEmpty {
+                    Button {
+                        onCallTap()
+                    } label: {
+                        HStack {
+                            Image(systemName: "phone.fill")
+                                .foregroundStyle(.primaryColorGreen)
+                            Text(establishment.phone)
+                                .underline()
+                        }
+                        .foregroundStyle(.colorBlack)
                     }
-                    .foregroundStyle(.colorBlack)
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
                 
-                
-                Divider()
-                
-                Text(establishment.info)
-                    .font(.body)
+                if !establishment.info.isEmpty {
+                    Divider()
+                    
+                    Text(establishment.info)
+                        .font(.body)
+                }
             }
             .padding(.horizontal, 20)
         }

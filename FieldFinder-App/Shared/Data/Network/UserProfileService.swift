@@ -30,7 +30,7 @@ final class UserProfileService: UserProfileServiceProtocol {
         request.setValue("\(HttpHeader.bearer) \(jwtToken)", forHTTPHeaderField: HttpHeader.authorization)
         
         do {
-            let (data, response) = try await session.data(for: request)
+            let (data, response) = try await session.ffData(for: request)
             
             guard let res = response as? HTTPURLResponse, res.statusCode == HttpResponseCodes.SUCCESS else {
                 throw FFError.errorFromApi(statusCode: -1)
@@ -68,7 +68,7 @@ final class UserProfileService: UserProfileServiceProtocol {
         request.setValue("\(HttpHeader.bearer) \(jwtToken)", forHTTPHeaderField: HttpHeader.authorization)
         request.httpBody = jsonData
         
-        let (data, response) = try await session.data(for: request)
+        let (data, response) = try await session.ffData(for: request)
         
         // Ensure the response is a valid HTTP response
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -103,7 +103,7 @@ final class UserProfileService: UserProfileServiceProtocol {
         request.setValue("\(HttpHeader.bearer) \(jwtToken)", forHTTPHeaderField: HttpHeader.authorization)
         
         do {
-            let (_, response) = try await session.data(for: request)
+            let (_, response) = try await session.ffData(for: request)
             
             guard let res = response as? HTTPURLResponse, res.statusCode == HttpResponseCodes.SUCCESS else {
                 throw FFError.errorFromApi(statusCode: -1)

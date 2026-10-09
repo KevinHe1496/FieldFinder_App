@@ -44,6 +44,14 @@ struct EstablishmentResponse: Codable, Identifiable {
     let latitude: Double
     let longitude: Double
     let canchas: [FieldResponse]
+    /// Lo envía el backend desde que existen establecimientos sin dueño (importados de Google Maps).
+    /// Es opcional para no romper si algún día falta en la respuesta.
+    var isClaimed: Bool? = nil
+    
+    /// `true` si el establecimiento ya tiene un dueño verificado.
+    var hasOwner: Bool {
+        isClaimed ?? !ownerID.isEmpty
+    }
     
     var photoEstablishment: [URL] {
         fotos.compactMap { url in

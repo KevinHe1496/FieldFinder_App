@@ -15,6 +15,8 @@ struct EstablishmentDetailView: View {
     @State private var showRegisterField = false
     @State private var showingStore = false
     @State private var showDeleteConfirmation = false
+    @State private var showClaimSheet = false
+    @State private var showLoginSheet = false
     
     init(establishmentID: String) {
         self.establishmentID = establishmentID
@@ -35,6 +37,16 @@ struct EstablishmentDetailView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 16))
                             .shadow(radius: 4)
                         
+                        if !establecimiento.hasOwner {
+                            ClaimBannerView {
+                                if appState.userID == nil {
+                                    showLoginSheet = true
+                                } else {
+                                    showClaimSheet = true
+                                }
+                            }
+                        }
+                        
                         EstablishmentInfoSection(
                             establishment: establecimiento,
                             callManager: viewModel.callManager,
@@ -47,7 +59,10 @@ struct EstablishmentDetailView: View {
                             }
                         )
                         
-                        EstablishmentServicesSection(establishment: establecimiento)
+                        // Los establecimientos importados no tienen servicios verificados.
+                        if establecimiento.hasOwner {
+                            EstablishmentServicesSection(establishment: establecimiento)
+                        }
                         
                         if !establecimiento.canchas.isEmpty {
                             EstablishmentFieldsSection(
@@ -114,6 +129,17 @@ struct EstablishmentDetailView: View {
         .navigationTitle("Establecimiento")
         .sheet(isPresented: $showRegisterField) {
             RegisterFieldView(establecimientoID: establishmentID)
+        }
+        .sheet(isPresented: $showClaimSheet) {
+            if case .success(let establecimiento) = viewModel.status {
+                ClaimEstablishmentView(
+                    establishmentID: establecimiento.id,
+                    establishmentName: establecimiento.name
+                )
+            }
+        }
+        .sheet(isPresented: $showLoginSheet) {
+            LoginView()
         }
         .task {
             try? await viewModel.getEstablishmentDetail(establishmentId: establishmentID)

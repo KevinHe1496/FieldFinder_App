@@ -12,6 +12,22 @@ struct RootView: View {
     @Environment(AppState.self) var appState
     
     var body: some View {
+        content
+            .alert(
+                "Tu sesión expiró",
+                isPresented: Binding(
+                    get: { appState.showSessionExpiredAlert },
+                    set: { appState.showSessionExpiredAlert = $0 }
+                )
+            ) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Vuelve a iniciar sesión desde la pestaña Perfil.")
+            }
+    }
+    
+    @ViewBuilder
+    private var content: some View {
         switch appState.status {
         case .login:
             if hasSeenWelcome {

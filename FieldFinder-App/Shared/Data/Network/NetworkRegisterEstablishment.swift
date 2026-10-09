@@ -25,7 +25,7 @@ final class EstablishmentService: NetworkRegisterEstablishmentProtocol {
         
         request.httpBody = try JSONEncoder().encode(establishmentModel)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.ffData(for: request)
         
         // 6. Verificar que la respuesta es válida y fue exitosa
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -85,7 +85,7 @@ final class EstablishmentService: NetworkRegisterEstablishmentProtocol {
         request.httpBody = body
         
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.shared.ffData(for: request)
             
             guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
                 let serverMessage = String(data: data, encoding: .utf8) ?? "Sin mensaje del servidor"
@@ -119,7 +119,7 @@ final class EstablishmentService: NetworkRegisterEstablishmentProtocol {
         
         request.httpBody = try JSONEncoder().encode(establishmentModel)
         
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let (_, response) = try await URLSession.shared.ffData(for: request)
         
         
         guard let httpResponse = response as? HTTPURLResponse,

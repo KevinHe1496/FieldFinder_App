@@ -43,14 +43,23 @@ final class UserAuthServiceUseCase: UserAuthServiceUseCaseProtocol {
     }
     
     func logout() async throws {
-        KeyChainFF().deletePK(key: ConstantsApp.CONS_TOKEN_ID_KEYCHAIN)
+        FFSessionTokens.clear()
     }
     
+    /// Devuelve `false` solo si no hay sesión o el servidor rechazó el refresh token.
+    /// Si no hay internet se asume que la sesión sigue siendo válida para no cerrarla por error.
     func validateToken() async -> Bool {
-        if tokenJWT != "" {
-            // Validación de expiración
+        let token = tokenJWT
+        guard !token.isEmpty else { return false }
+        
+        if !FFSessionTokens.isExpired(token) {
             return true
-        } else {
+        }
+        
+        switch await FFTokenRefresher.shared.refresh() {
+        case .refreshed, .unreachable:
+            return true
+        case .rejected:
             return false
         }
     }
