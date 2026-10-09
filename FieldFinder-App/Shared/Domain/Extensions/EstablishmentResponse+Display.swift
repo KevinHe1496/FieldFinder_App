@@ -115,7 +115,11 @@ extension EstablishmentResponse {
             // Celular ecuatoriano escrito sin el 0 inicial (99 924 0790).
             digits = "593" + digits
         }
-        return digits
+        // En Ecuador solo los celulares (09…) tienen WhatsApp; un fijo (02…, 04…) daría un link roto.
+        if digits.hasPrefix("593") {
+            return digits.hasPrefix("5939") && digits.count == 12 ? digits : nil
+        }
+        return digits.count >= 10 ? digits : nil
     }
 
     /// Abre WhatsApp con un mensaje listo para reservar.

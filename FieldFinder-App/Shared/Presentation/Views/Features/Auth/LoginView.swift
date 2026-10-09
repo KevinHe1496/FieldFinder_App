@@ -22,12 +22,11 @@ struct LoginView: View {
     #endif
 
     @State private var showRegisterSheet = false
-    @FocusState private var focusedField: Field?
+    @FocusState private var emailFocused: Bool
+    @FocusState private var passwordFocused: Bool
 
     @Environment(AppState.self) var appState
     @Environment(\.dismiss) private var dismiss
-
-    private enum Field { case email, password }
 
     private var canSubmit: Bool {
         !email.trimmingCharacters(in: .whitespaces).isEmpty && !password.isEmpty
@@ -58,39 +57,37 @@ struct LoginView: View {
 
                     // MARK: - Formulario
                     VStack(spacing: 14) {
-                        CustomTextFieldLogin(
-                            titleKey: "Email",
-                            textField: $email,
-                            keyboardType: .emailAddress,
-                            prompt: Text("Email"),
-                            colorBackground: .thirdColorWhite
+                        BrandTextField(
+                            title: "Correo",
+                            text: $email,
+                            placeholder: "tu@correo.com",
+                            keyboard: .emailAddress,
+                            onDark: true,
+                            focus: $emailFocused
                         )
                         .textContentType(.username)
                         .autocorrectionDisabled(true)
                         .textInputAutocapitalization(.never)
                         .submitLabel(.next)
-                        .focused($focusedField, equals: .email)
-                        .onSubmit { focusedField = .password }
+                        .onSubmit { passwordFocused = true }
 
-                        CustomSecureFieldView(titleKey: "Contraseña", textField: $password, keyboardType: .default, prompt: Text("Contraseña"))
-                            .textContentType(.password)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled(true)
-                            .submitLabel(.go)
-                            .focused($focusedField, equals: .password)
-                            .onSubmit(submit)
+                        BrandSecureField(
+                            title: "Contraseña",
+                            text: $password,
+                            onDark: true,
+                            focus: $passwordFocused
+                        )
+                        .textContentType(.password)
+                        .submitLabel(.go)
+                        .onSubmit(submit)
 
-                        Button(action: submit) {
-                            if appState.isLoading {
-                                ProgressView()
-                                    .tint(Color.secondaryColorBlack)
-                            } else {
-                                Text("Iniciar sesión")
-                            }
-                        }
-                        .buttonStyle(BrandPrimaryButtonStyle())
-                        .disabled(!canSubmit || appState.isLoading)
-                        .opacity(canSubmit ? 1 : 0.5)
+                        BrandSubmitButton(
+                            title: "Iniciar sesión",
+                            isLoading: appState.isLoading,
+                            isEnabled: canSubmit,
+                            action: submit
+                        )
+                        .padding(.top, 4)
                     }
 
                     // MARK: - Crear cuenta
@@ -140,7 +137,8 @@ struct LoginView: View {
 
     private func submit() {
         guard canSubmit, !appState.isLoading else { return }
-        focusedField = nil
+        emailFocused = false
+        passwordFocused = false
         Task {
             try? await appState.login(
                 email: email.trimmingCharacters(in: .whitespaces),

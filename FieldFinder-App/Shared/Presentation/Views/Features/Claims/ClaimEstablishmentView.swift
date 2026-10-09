@@ -39,79 +39,62 @@ struct ClaimEstablishmentView: View {
     private var form: some View {
         @Bindable var bindable = viewModel
 
-        return Form {
-            Section {
+        return ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(establishmentName)
-                        .font(.headline)
-                        .foregroundStyle(.primaryColorGreen)
+                        .font(.system(size: 22, weight: .heavy))
+                        .foregroundStyle(Color.brandInk)
                     Text("Revisaremos tu solicitud y te daremos acceso para agregar fotos, canchas, precios y teléfono.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(.system(size: 15))
+                        .foregroundStyle(Color.brandTextSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(.vertical, 4)
-            }
 
-            Section("¿Cuál es tu relación con el lugar?") {
-                Picker("Relación", selection: $bindable.relationship) {
-                    ForEach(ClaimRelationship.allCases) { relationship in
-                        Text(relationship.displayName).tag(relationship)
+                BrandFormSection(title: "¿Cuál es tu relación con el lugar?") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(ClaimRelationship.allCases) { relationship in
+                            BrandFilterChip(title: relationship.displayName,
+                                            isSelected: viewModel.relationship == relationship) {
+                                viewModel.relationship = relationship
+                            }
+                        }
                     }
                 }
-                .pickerStyle(.inline)
-                .labelsHidden()
-            }
 
-            Section {
-                TextField("Teléfono de contacto", text: $bindable.phone)
-                    .keyboardType(.phonePad)
-                    .textContentType(.telephoneNumber)
-                TextField("Cédula o RUC", text: $bindable.documentID)
-                    .keyboardType(.numberPad)
-                TextField("Instagram, Facebook o web (opcional)", text: $bindable.socialMedia)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-            } header: {
-                Text("Datos de contacto")
-            } footer: {
-                Text("Solo los usamos para verificar que eres el dueño. No se muestran en la app.")
-            }
+                BrandFormSection(title: "Datos de contacto",
+                                 footer: "Solo los usamos para verificar que eres el dueño. No se muestran en la app.") {
+                    BrandTextField(title: "Teléfono de contacto", text: $bindable.phone,
+                                   placeholder: "099 123 4567", keyboard: .phonePad)
+                        .textContentType(.telephoneNumber)
+                    BrandTextField(title: "Cédula o RUC", text: $bindable.documentID,
+                                   placeholder: "1712345678", keyboard: .numberPad)
+                    BrandTextField(title: "Redes sociales o web (opcional)", text: $bindable.socialMedia,
+                                   placeholder: "instagram.com/tucancha")
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                }
 
-            Section {
-                TextField("Ej.: Soy el dueño desde 2019, el local está a nombre de mi empresa…",
-                          text: $bindable.message,
-                          axis: .vertical)
-                    .lineLimit(3...6)
-            } header: {
-                Text("¿Cómo podemos verificarlo?")
-            }
+                BrandFormSection(title: "¿Cómo podemos verificarlo?") {
+                    BrandTextField(title: "Mensaje", text: $bindable.message,
+                                   placeholder: "Ej.: Soy el dueño desde 2019, el local está a nombre de mi empresa…",
+                                   axis: .vertical)
+                }
 
-            if let error = viewModel.errorMessage {
-                Section {
+                if let error = viewModel.errorMessage {
                     Label(error, systemImage: "exclamationmark.triangle.fill")
                         .foregroundStyle(.red)
                         .font(.subheadline)
                 }
-            }
 
-            Section {
-                Button {
+                BrandSubmitButton(title: "Enviar solicitud", isLoading: viewModel.isSubmitting) {
                     Task { await viewModel.submit(establishmentID: establishmentID) }
-                } label: {
-                    HStack {
-                        Spacer()
-                        if viewModel.isSubmitting {
-                            ProgressView()
-                        } else {
-                            Text("Enviar solicitud")
-                                .bold()
-                        }
-                        Spacer()
-                    }
                 }
-                .disabled(viewModel.isSubmitting)
             }
+            .padding(16)
         }
+        .scrollDismissesKeyboard(.interactively)
+        .background(Color.brandBackground)
     }
 
     private var successView: some View {
@@ -131,10 +114,9 @@ struct ClaimEstablishmentView: View {
 
             Spacer()
 
-            CustomButtonView(title: "Listo", color: .primaryColorGreen, textColor: .white) {
-                dismiss()
-            }
-            .padding(.horizontal)
+            Button("Listo") { dismiss() }
+                .buttonStyle(BrandPrimaryButtonStyle())
+                .padding(.horizontal)
         }
         .padding()
         .task {

@@ -57,7 +57,7 @@ struct EstablishmentDetailView: View {
                                 cameraPosition: $cameraPosition
                             )
                         } else {
-                            unknownInfoCard
+                            unknownInfoCard(for: establecimiento)
                                 .padding(.horizontal, 20)
                             
                             ClaimBannerView {
@@ -278,14 +278,18 @@ struct EstablishmentDetailView: View {
         return parts.joined(separator: " · ")
     }
     
-    private var unknownInfoCard: some View {
+    private func unknownInfoCard(for establecimiento: EstablishmentResponse) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Todavía no sabemos")
                 .font(.system(size: 15, weight: .bold))
             VStack(alignment: .leading, spacing: 8) {
                 Label("Precio por hora", systemImage: "dollarsign.circle")
                 Label("Tipo de cancha y tamaño", systemImage: "sportscourt")
-                Label("Teléfono y horarios", systemImage: "phone")
+                if establecimiento.phone.isEmpty {
+                    Label("Teléfono y horarios", systemImage: "phone")
+                } else {
+                    Label("Horarios", systemImage: "clock")
+                }
             }
             .font(.system(size: 14))
             .foregroundStyle(Color.brandTextSecondary)
@@ -299,46 +303,61 @@ struct EstablishmentDetailView: View {
     // MARK: - Barra inferior fija
     
     private func bottomBar(for establecimiento: EstablishmentResponse) -> some View {
-        HStack(spacing: 10) {
-            if establecimiento.hasOwner {
-                if let price = establecimiento.minPriceText {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("Desde")
-                            .font(.system(size: 12))
-                            .foregroundStyle(Color.brandTextSecondary)
-                        Text("\(price)/h")
-                            .font(.system(size: 18, weight: .heavy))
-                            .foregroundStyle(Color.brandInk)
-                    }
-                    .fixedSize()
-                    .padding(.trailing, 4)
+        let whatsAppURL = establecimiento.whatsAppURL
+        
+        return HStack(spacing: 10) {
+            if establecimiento.hasOwner, let price = establecimiento.minPriceText {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Desde")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.brandTextSecondary)
+                    Text("\(price)/h")
+                        .font(.system(size: 18, weight: .heavy))
+                        .foregroundStyle(Color.brandInk)
                 }
-                
-                if !establecimiento.phone.isEmpty {
-                    Button {
-                        viewModel.prepareCall(phone: establecimiento.phone)
-                    } label: {
-                        Image(systemName: "phone.fill")
-                    }
-                    .buttonStyle(BrandIconButtonStyle())
-                    .accessibilityLabel(Text("Llamar"))
+                .fixedSize()
+                .padding(.trailing, 4)
+            }
+            
+            // Llamar: siempre que haya teléfono (con o sin dueño).
+            if !establecimiento.phone.isEmpty {
+                Button {
+                    viewModel.prepareCall(phone: establecimiento.phone)
+                } label: {
+                    Image(systemName: "phone.fill")
                 }
-                
-                if let url = establecimiento.whatsAppURL {
-                    Button {
-                        openURL(url)
-                    } label: {
-                        Label("Reservar por WhatsApp", systemImage: "bubble.left.fill")
-                    }
-                    .buttonStyle(BrandPrimaryButtonStyle())
-                } else {
+                .buttonStyle(BrandIconButtonStyle())
+                .accessibilityLabel(Text("Llamar"))
+            }
+            
+            if !establecimiento.hasOwner {
+                // Sin dueño no hay sección de mapa: "Cómo llegar" queda como ícono si WhatsApp es el botón principal.
+                if whatsAppURL != nil {
                     Button {
                         viewModel.prepareMaps(for: establecimiento)
                     } label: {
-                        Label("Cómo llegar", systemImage: "location.fill")
+                        Image(systemName: "location.fill")
                     }
-                    .buttonStyle(BrandPrimaryButtonStyle())
+                    .buttonStyle(BrandIconButtonStyle())
+                    .accessibilityLabel(Text("Cómo llegar"))
+                } else if let shareURL = establecimiento.mapsShareURL {
+                    ShareLink(item: shareURL, subject: Text(establecimiento.name)) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                    .buttonStyle(BrandIconButtonStyle())
+                    .accessibilityLabel(Text("Compartir"))
                 }
+            }
+            
+            if let whatsAppURL {
+                Button {
+                    openURL(whatsAppURL)
+                } label: {
+                    Label(establecimiento.hasOwner ? LocalizedStringKey("Reservar por WhatsApp") : LocalizedStringKey("WhatsApp"),
+                          systemImage: "bubble.left.fill")
+                        .lineLimit(1)
+                }
+                .buttonStyle(BrandPrimaryButtonStyle())
             } else {
                 Button {
                     viewModel.prepareMaps(for: establecimiento)
@@ -346,14 +365,6 @@ struct EstablishmentDetailView: View {
                     Label("Cómo llegar", systemImage: "location.fill")
                 }
                 .buttonStyle(BrandPrimaryButtonStyle())
-                
-                if let shareURL = establecimiento.mapsShareURL {
-                    ShareLink(item: shareURL, subject: Text(establecimiento.name)) {
-                        Image(systemName: "square.and.arrow.up")
-                    }
-                    .buttonStyle(BrandIconButtonStyle())
-                    .accessibilityLabel(Text("Compartir"))
-                }
             }
         }
         .padding(.horizontal, 20)

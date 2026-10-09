@@ -57,33 +57,44 @@ struct EditEstablishmentView: View {
     }
     
     @State private var showAlert = false
-  
-    
-    var body: some View {
-        Form {
-            Section {
-                TextField("Nombre", text: $name)
-                TextField("información", text: $info)
-                
-                TextField("Calle", text: $address)
-                TextField("Calle 2", text: $address2)
-                TextField("Teléfono", text: $phone)
-        
-                Toggle("Parqueadero", isOn: $parqueadero)
-                Toggle("Vestidores", isOn: $vestidores)
-                Toggle("Bar", isOn: $bar)
-                Toggle("Baños", isOn: $banos)
-                Toggle("Duchas", isOn: $duchas)
-            } header: {
-                Text("Información")
-            }
+    @State private var isSaving = false
 
-            
-            Section {
-                Button("Guardar cambios") {
-                    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                BrandFormSection(title: "Datos de la cancha") {
+                    BrandTextField(title: "Nombre", text: $name)
+                        .autocorrectionDisabled(true)
+                    BrandTextField(title: "Descripción", text: $info,
+                                   placeholder: "Horarios, tipo de canchas, cómo reservar…",
+                                   axis: .vertical)
+                    BrandTextField(title: "Teléfono o WhatsApp", text: $phone,
+                                   placeholder: "099 123 4567", keyboard: .phonePad,
+                                   hint: "Si es celular, los jugadores te escribirán por WhatsApp.")
+                        .textContentType(.telephoneNumber)
+                }
+
+                BrandFormSection(title: "Ubicación") {
+                    BrandTextField(title: "Calle principal", text: $address)
+                        .autocorrectionDisabled(true)
+                    BrandTextField(title: "Intersección o referencia", text: $address2)
+                }
+
+                BrandFormSection(title: "Servicios") {
+                    VStack(spacing: 4) {
+                        BrandToggleRow(title: "Parqueadero", systemImage: "car.fill", isOn: $parqueadero)
+                        BrandToggleRow(title: "Vestidores", systemImage: "tshirt.fill", isOn: $vestidores)
+                        BrandToggleRow(title: "Baños", systemImage: "toilet.fill", isOn: $banos)
+                        BrandToggleRow(title: "Duchas", systemImage: "shower.fill", isOn: $duchas)
+                        BrandToggleRow(title: "Bar", systemImage: "cup.and.saucer.fill", isOn: $bar)
+                    }
+                }
+
+                BrandSubmitButton(title: "Guardar cambios", isLoading: isSaving,
+                                  isEnabled: !name.trimmingCharacters(in: .whitespaces).isEmpty) {
+                    isSaving = true
                     Task {
-                        try await viewModel.editEstablishment(
+                        try? await viewModel.editEstablishment(
                             establishmentID: establishmentID,
                             name: name,
                             info: info,
@@ -96,23 +107,23 @@ struct EditEstablishmentView: View {
                             duchas: duchas,
                             phone: phone
                         )
+                        isSaving = false
                         showAlert = true
                     }
-                    
-                  
                 }
-               
             }
+            .padding(16)
         }
-        .alert("Cambios guardados", isPresented: $showAlert) {
-           
-            
+        .scrollDismissesKeyboard(.interactively)
+        .background(Color.brandBackground)
+        .navigationTitle("Editar mi cancha")
+        .navigationBarTitleDisplayMode(.inline)
+        .alert(viewModel.didSaveEdit ? Text("Cambios guardados") : Text("No se guardaron los cambios"), isPresented: $showAlert) {
             Button("OK") {
-               
-                dismiss()
+                if viewModel.didSaveEdit { dismiss() }
             }
         } message: {
-            Text("Tu establecimiento se actualizó.")
+            Text(viewModel.alertMessage ?? "")
         }
     }
 }

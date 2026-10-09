@@ -18,9 +18,6 @@ struct CustomUIImage: View {
     
     var body: some View {
         VStack {
-            Text("Añadir fotografías:")
-                .font(.appSubtitle)
-            
             if selectedImagesData.count < 12 {
                 PhotosPicker(
                     selection: $selectedItems,
@@ -31,15 +28,16 @@ struct CustomUIImage: View {
                     HStack {
                         Image(systemName: "photo.on.rectangle.angled")
                             .font(.system(size: 24))
-                            .foregroundStyle(.primaryColorGreen)
+                            .foregroundStyle(Color.brandDeepGreen)
                         Text("Seleccionar fotos")
-                            .foregroundStyle(.primaryColorGreen)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color.brandDeepGreen)
                     }
                     .frame(maxWidth: .infinity, minHeight: 100)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .background(Color.brandBackground, in: RoundedRectangle(cornerRadius: 14))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.brandBorder, style: StrokeStyle(lineWidth: 1, dash: [6, 4]))
                     )
                 }
                 .onChange(of: selectedItems) { newItems, _ in

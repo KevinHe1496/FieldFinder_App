@@ -25,88 +25,55 @@ struct EditFieldView: View {
     @State private var showAlert: Bool = false
     @State private var message: String = ""
     
+    @State private var isSaving = false
+
     var body: some View {
-        NavigationStack {
-            VStack {
-                HStack {
-                    Text("Cancha")
-                    Spacer()
-                    Picker("Selecciona la cancha", selection: $selectedField) {
-                        ForEach(Field.allCases) { cancha in
-                            Text(cancha.displayName)
-                                .tag(cancha)
-                        }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                BrandFormSection(title: "Cancha") {
+                    BrandChoiceField(title: "Tipo de césped", options: Field.allCases,
+                                     selection: $selectedField) { $0.displayName }
+                    BrandChoiceField(title: "Tamaño", options: Capacidad.allCases,
+                                     selection: $selectedCapacidad) { $0.displayName }
+                    VStack(spacing: 4) {
+                        BrandToggleRow(title: "Iluminada", systemImage: "lightbulb.fill", isOn: $iluminada)
+                        BrandToggleRow(title: "Cubierta", systemImage: "house.fill", isOn: $cubierta)
                     }
-                    .pickerStyle(.menu)
                 }
-                
-                Divider()
-                HStack {
-                    Text("Capacidad")
-                    Spacer()
-                    Picker("Selecciona modalidad", selection: $selectedCapacidad) {
-                        ForEach(Capacidad.allCases) { capacidad in
-                            Text(capacidad.rawValue)
-                                .tag(capacidad)
-                        }
+
+                BrandFormSection(title: "Precio") {
+                    BrandPriceField(title: "Precio por hora", text: $precio,
+                                    currencySymbol: viewModel.localCurrencySymbol())
+                }
+
+                BrandSubmitButton(title: "Guardar cambios", isLoading: isSaving) {
+                    isSaving = true
+                    Task {
+                        let newModel = FieldRequest(
+                            tipo: selectedField.rawValue,
+                            modalidad: selectedCapacidad.rawValue,
+                            precio: Double(precio.replacingOccurrences(of: ",", with: ".")) ?? 0,
+                            iluminada: iluminada,
+                            cubierta: cubierta,
+                            establecimientoID: establecimientoID
+                        )
+
+                        try? await viewModel.editCancha(canchaID: canchaID, canchaModel: newModel)
+                        isSaving = false
+                        showAlert = true
                     }
-                    .pickerStyle(.menu)
                 }
-                
-                Divider()
-                Toggle("Iluminada", isOn: $iluminada)
-                
-                Divider()
-                Toggle("Cubierta", isOn: $cubierta)
             }
-            .padding()
-            .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            
-            //MARK: PRECIO
-            HStack {
-                Text("Precio por hora")
-                Spacer()
-                HStack {
-                    Text(viewModel.localCurrencySymbol())
-                        .foregroundStyle(.secondary)
-                    TextField("0.00", text: $precio)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                
-            }
-            .padding()
-            .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            
-            
-            CustomButtonView(title: "Guardar", color: .primaryColorGreen, textColor: .thirdColorWhite) {
-                Task {
-                    
-                    let newModel = FieldRequest(
-                        tipo: selectedField.rawValue,
-                        modalidad: selectedCapacidad.rawValue,
-                        precio: Double(precio) ?? 0,
-                        iluminada: iluminada,
-                        cubierta: cubierta,
-                        establecimientoID: establecimientoID
-                    )
-                    
-                    try await viewModel.editCancha(canchaID: canchaID, canchaModel: newModel)
-                    showAlert = true
-                }
-                
-            }
-            .navigationTitle("Editar Cancha")
-            .padding()
-            .alert("Aviso", isPresented: $showAlert) {
-                Button("OK") { dismiss() }
-            } message: {
-                Text(viewModel.alertMessage ?? "")
-            }
-            Spacer()
-            
+            .padding(16)
+        }
+        .scrollDismissesKeyboard(.interactively)
+        .background(Color.brandBackground)
+        .navigationTitle("Editar cancha")
+        .navigationBarTitleDisplayMode(.inline)
+        .alert("Aviso", isPresented: $showAlert) {
+            Button("OK") { dismiss() }
+        } message: {
+            Text(viewModel.alertMessage ?? "")
         }
     }
 }
