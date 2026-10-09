@@ -104,7 +104,7 @@ struct EditEstablishmentView: View {
                
             }
         }
-        .alert("Mensaje", isPresented: $showAlert) {
+        .alert("Cambios guardados", isPresented: $showAlert) {
            
             
             Button("OK") {
@@ -112,7 +112,7 @@ struct EditEstablishmentView: View {
                 dismiss()
             }
         } message: {
-            Text("Se ha editado exitosamente")
+            Text("Tu establecimiento se actualizó.")
         }
     }
 }

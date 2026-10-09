@@ -126,7 +126,7 @@ struct RegisterFieldView: View {
                 }
             }
             .padding()
-            .alert("Mensaje", isPresented: $showAlert) {
+            .alert("Aviso", isPresented: $showAlert) {
                 if viewModel.shouldDismissAfterAlert {
                     Button("OK") { dismiss() }
                 }

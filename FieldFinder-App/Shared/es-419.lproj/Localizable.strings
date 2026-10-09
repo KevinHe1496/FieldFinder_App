@@ -355,3 +355,26 @@
 "rol_usuario_jugador" = "Jugador";
 "rol_usuario_dueno" = "Dueño";
 "Sin fotos disponibles" = "sin fotos disponibles";
+
+/* UX quick wins (1.0.3) */
+"¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer." = "¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer.";
+"¿Eliminar esta cancha?" = "¿Eliminar esta cancha?";
+"Los jugadores ya no la verán. Esta acción no se puede deshacer." = "Los jugadores ya no la verán. Esta acción no se puede deshacer.";
+"Cambios guardados" = "Cambios guardados";
+"Tu establecimiento se actualizó." = "Tu establecimiento se actualizó.";
+"Aviso" = "Aviso";
+"Iniciar sesión" = "Iniciar sesión";
+"Crear cuenta" = "Crear cuenta";
+"Guarda tus canchas favoritas o, si tienes una cancha, administra sus precios y fotos." = "Guarda tus canchas favoritas o, si tienes una cancha, administra sus precios y fotos.";
+"No pudimos eliminar tu cuenta" = "No pudimos eliminar tu cuenta";
+"Revisa tu conexión e inténtalo de nuevo." = "Revisa tu conexión e inténtalo de nuevo.";
+"Inicia sesión" = "Inicia sesión";
+"Guarda tus canchas favoritas y administra la tuya si eres dueño." = "Guarda tus canchas favoritas y administra la tuya si eres dueño.";
+"¿No tienes cuenta?" = "¿No tienes cuenta?";
+"Cerrar" = "Cerrar";
+"No pudimos iniciar sesión" = "No pudimos iniciar sesión";
+"Crea tu cuenta" = "Crea tu cuenta";
+"Mínimo 6 caracteres" = "Mínimo 6 caracteres";
+"Revisa tus datos" = "Revisa tus datos";
+"No pudimos crear tu cuenta. Revisa tus datos e inténtalo de nuevo." = "No pudimos crear tu cuenta. Revisa tus datos e inténtalo de nuevo.";
+"No pudimos crear tu cuenta. Puede que ese correo ya esté registrado o que no tengas conexión." = "No pudimos crear tu cuenta. Puede que ese correo ya esté registrado o que no tengas conexión.";

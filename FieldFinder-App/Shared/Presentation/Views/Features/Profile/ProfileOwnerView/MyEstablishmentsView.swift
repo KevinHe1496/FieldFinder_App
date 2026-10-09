@@ -69,7 +69,7 @@ struct MyEstablishmentsView: View {
             .sheet(isPresented: $showingStore) {
                 StoreView()
             }
-            .navigationTitle("Mis Establecimientos")
+            .navigationTitle("Mis establecimientos")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: handleAddEstablishmentTapped) {

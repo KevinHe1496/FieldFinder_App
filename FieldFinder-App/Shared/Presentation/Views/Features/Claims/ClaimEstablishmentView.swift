@@ -137,6 +137,11 @@ struct ClaimEstablishmentView: View {
             .padding(.horizontal)
         }
         .padding()
+        .task {
+            // Momento con contexto para pedir notificaciones (antes se pedía al abrir la app).
+            try? await Task.sleep(for: .seconds(1))
+            await PushPermission.requestIfNeeded()
+        }
     }
 }
 

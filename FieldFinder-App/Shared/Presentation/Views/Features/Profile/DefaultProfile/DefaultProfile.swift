@@ -62,7 +62,7 @@ struct DefaultProfile: View {
                 .bold()
                 .multilineTextAlignment(.center)
             
-            Text("Inicia sesión si ya tienes una cuenta o regístrate como jugador o dueño para guardar tus canchas o administrarlas.")
+            Text("Guarda tus canchas favoritas o, si tienes una cancha, administra sus precios y fotos.")
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
@@ -70,7 +70,7 @@ struct DefaultProfile: View {
             
             VStack(spacing: 16) {
                 CustomButtonView(
-                    title: "Iniciar Sesión",
+                    title: "Iniciar sesión",
                     color: Color.primaryColorGreen,
                     textColor: Color.white
                 ) {
@@ -78,7 +78,7 @@ struct DefaultProfile: View {
                 }
 
                 CustomButtonView(
-                    title: "Registrarse",
+                    title: "Crear cuenta",
                     color: Color.primaryColorGreen,
                     textColor: Color.white
                 ) {

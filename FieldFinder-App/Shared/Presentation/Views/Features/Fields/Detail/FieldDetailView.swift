@@ -108,7 +108,7 @@ struct FieldDetailView: View {
                     contentVisible = true
                 }
             }
-            .alert("Mensaje", isPresented: $showAlert) {
+            .alert("¿Eliminar esta cancha?", isPresented: $showAlert) {
                 Button("Cancelar", role: .cancel) {}
                 Button("Eliminar", role: .destructive) {
                     Task {
@@ -117,7 +117,7 @@ struct FieldDetailView: View {
                     }
                 }
             } message: {
-                Text("¿Estás seguro de eliminar esta cancha?")
+                Text("Los jugadores ya no la verán. Esta acción no se puede deshacer.")
             }
         }
     }
