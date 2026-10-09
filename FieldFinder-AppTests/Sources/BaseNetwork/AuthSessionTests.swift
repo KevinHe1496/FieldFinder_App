@@ -116,3 +116,47 @@ private extension Data {
             .replacingOccurrences(of: "=", with: "")
     }
 }
+
+final class EstablishmentDisplayTests: XCTestCase {
+
+    private func establishment(phone: String, canchas: [FieldResponse] = []) -> EstablishmentResponse {
+        EstablishmentResponse(
+            id: "1", name: "Cancha Test", ownerID: "", info: "", address: "Calle 1, Quito",
+            isFavorite: false, address2: nil, phone: phone, userName: "", userRol: "",
+            parquedero: false, vestidores: false, banos: false, duchas: false, bar: false,
+            fotos: [], latitude: -0.18, longitude: -78.46, canchas: canchas
+        )
+    }
+
+    private func field(tipo: String, modalidad: String, precio: Double, cubierta: Bool = false) -> FieldResponse {
+        FieldResponse(id: UUID().uuidString, tipo: tipo, modalidad: modalidad, precio: precio,
+                      cubierta: cubierta, iluminada: true, fotos: [])
+    }
+
+    func test_WhatsAppNumber_EcuadorMobile() {
+        XCTAssertEqual(establishment(phone: "099 924 0790").whatsAppNumber, "593999240790")
+        XCTAssertEqual(establishment(phone: "+593 99 924 0790").whatsAppNumber, "593999240790")
+        XCTAssertNil(establishment(phone: "").whatsAppNumber)
+    }
+
+    func test_MinPrice_IgnoresZero() {
+        let est = establishment(phone: "", canchas: [
+            field(tipo: "Sintético", modalidad: "7v7", precio: 0),
+            field(tipo: "Sintético", modalidad: "5v5", precio: 35),
+            field(tipo: "Césped", modalidad: "11v11", precio: 60)
+        ])
+        XCTAssertEqual(est.minPriceText, "$35")
+    }
+
+    func test_Filters() {
+        let indoor5 = field(tipo: "Sintético", modalidad: "5v5", precio: 30, cubierta: true)
+        XCTAssertTrue(FieldFilter.sintetica.matches(indoor5))
+        XCTAssertTrue(FieldFilter.cubierta.matches(indoor5))
+        XCTAssertTrue(FieldFilter.futbol5.matches(indoor5))
+        XCTAssertFalse(FieldFilter.futbol7.matches(indoor5))
+    }
+
+    func test_HasOwner_FallsBackToOwnerID() {
+        XCTAssertFalse(establishment(phone: "").hasOwner)
+    }
+}

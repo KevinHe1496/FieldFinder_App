@@ -85,7 +85,6 @@
 "Canchas" = "Fields";
 
 /* EstablishmentMapSection */
-"Ubicación" = "Location";
 
 /* EstablishmentInfoSection */
 "Llamar" = "Call";
@@ -160,7 +159,6 @@
 "Error al cargar los establecimientos" = "Error loading establishments";
 "Intentar denuevo." = "Try again.";
 "Favoritos" = "Favorites";
-"No se pudo cargar los favoritos." = "Favorites could not be loaded.";
 
 /* EstablishmentDetailOwnerView */
 "Agregar cancha" = "Add field";
@@ -217,7 +215,6 @@
 "7. Cambios en los términos" = "7. Changes to the terms";
 "Nos reservamos el derecho de actualizar estos términos en cualquier momento. Se notificará a los usuarios sobre cambios relevantes dentro de la aplicación." = "We reserve the right to update these terms at any time. Users will be notified of relevant changes within the app.";
 "Gracias por confiar en FieldFinder." = "Thank you for trusting FieldFinder.";
-"Condiciones de uso" = "Terms of use";
 
 
 /* DefaultProfile */
@@ -235,7 +232,6 @@
 "Email" = "Email";
 "Contraseña" = "Password";
 "INICIA SESIÓN" = "LOGIN";
-"Mensaje" = "Message";
 
 /* RegisterUserView */
 "Selecciona tu rol:" = "Select your role:";
@@ -273,9 +269,7 @@
 "Aprovecha al máximo nuestra app" = "Make the most of our app";
 "Obteniendo ofertas..." = "Fetching offers...";
 "Lo sentimos, hubo un error cargando nuestra tienda." = "Sorry, there was an error loading our store.";
-"Intentar de nuevo" = "Try again";
 "Restaurar compras" = "Restore purchases";
-"Cancelar" = "Cancel";
 "Las compras dentro de la app están deshabilitadas" = "In-app purchases are disabled";
 "No puedes comprar el desbloqueo Premium porque las compras dentro de la app están deshabilitadas en este dispositivo. 
                 Por favor, consulta con quien administre tu dispositivo para obtener asistencia." = "You can't purchase the Premium unlock because in-app purchases are disabled on this device. 
@@ -305,8 +299,56 @@
 "surface_grass"     = "Grass";
 
 "Cancha de: %@" = "Field type: %@";
-"Sintético"     = "Synthetic";
-"Césped"        = "Grass";
 "rol_usuario_jugador" = "Player";
 "rol_usuario_dueno" = "Owner";
 "Sin fotos disponibles" = "No photos available";
+
+/* Rediseño 1.0.3 */
+"Canchas cerca de ti" = "Fields near you";
+"Busca por nombre o barrio" = "Search by name or neighborhood";
+"Sintética" = "Turf";
+"Fútbol 5" = "5-a-side";
+"Fútbol 7" = "7-a-side";
+"cancha" = "field";
+"canchas" = "fields";
+"ordenadas por distancia" = "sorted by distance";
+"Usar mi ubicación" = "Use my location";
+"Ninguna cancha coincide con tu búsqueda" = "No fields match your search";
+"Quitar filtros" = "Clear filters";
+"Aún no tenemos canchas en tu zona" = "We don't have fields in your area yet";
+"Estamos empezando por Quito y sus valles. Mientras llegamos a tu ciudad, puedes ver las canchas de Quito." = "We're starting in Quito, Ecuador. Until we reach your city, you can browse the fields in Quito.";
+"Ver canchas en Quito" = "Browse fields in Quito";
+"Buscar de nuevo" = "Search again";
+"Sin verificar" = "Not verified";
+"Sin verificar · datos de Google Maps" = "Not verified · Google Maps data";
+"Verificada" = "Verified";
+"Desde %@" = "From %@";
+"/hora" = "/hour";
+"Desde" = "From";
+"Precio no publicado" = "Price not listed";
+"Guardar en favoritos" = "Save to favorites";
+"Quitar de favoritos" = "Remove from favorites";
+"Cómo llegar" = "Directions";
+"Canchas y precios" = "Fields and prices";
+"El dueño todavía no registró sus canchas." = "The owner hasn't added their fields yet.";
+"Todavía no sabemos" = "Not known yet";
+"Tipo de cancha y tamaño" = "Field type and size";
+"Teléfono y horarios" = "Phone and hours";
+"Reservar por WhatsApp" = "Book on WhatsApp";
+"Compartir" = "Share";
+"¿Es tu cancha?" = "Is this your field?";
+"Reclámala gratis: agrega fotos, precios y tu WhatsApp para que los jugadores reserven contigo." = "Claim it for free: add photos, prices and your WhatsApp so players can book with you.";
+"Reclamar gratis" = "Claim for free";
+"Encuentra cancha y " = "Find a field and ";
+"juega hoy" = "play today";
+"Sintéticas, cubiertas, de fútbol 5, 7 u 11." = "Turf, indoor, 5, 7 or 11-a-side.";
+"Precios claros" = "Clear prices";
+"Compara el valor por hora antes de llamar." = "Compare hourly prices before you call.";
+"Escribe directo al dueño, con tu día y hora listos." = "Message the owner directly, with your day and time ready.";
+"Ver canchas cerca" = "See fields nearby";
+"Te pediremos tu ubicación solo para ordenar las canchas por distancia." = "We'll ask for your location only to sort fields by distance.";
+"Mapa de canchas" = "Fields map";
+"Centrar en mi ubicación" = "Center on my location";
+"Mis solicitudes" = "My requests";
+"Reclamar" = "Claim";
+"Enviar solicitud" = "Send request";

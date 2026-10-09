@@ -22,9 +22,11 @@ struct EstablishmentDetailView: View {
         self.establishmentID = establishmentID
     }
     
+    @Environment(\.openURL) private var openURL
+    
     var body: some View {
         ZStack {
-            Color(.systemGroupedBackground).ignoresSafeArea()
+            Color.brandBackground.ignoresSafeArea()
             
             switch viewModel.status {
             case .idle, .loading:
@@ -32,12 +34,32 @@ struct EstablishmentDetailView: View {
                 
             case .success(let establecimiento):
                 ScrollView {
-                    VStack(spacing: 20) {
-                        PhotoGalleryView(photoURLs: establecimiento.photoEstablishment, height: 280)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .shadow(radius: 4)
+                    VStack(alignment: .leading, spacing: 22) {
+                        hero(for: establecimiento)
                         
-                        if !establecimiento.hasOwner {
+                        header(for: establecimiento)
+                            .padding(.horizontal, 20)
+                        
+                        if establecimiento.hasOwner {
+                            fieldsSection(for: establecimiento)
+                                .padding(.horizontal, 20)
+                            
+                            EstablishmentServicesSection(establishment: establecimiento)
+                                .padding(.horizontal, 20)
+                            
+                            EstablishmentMapSection(
+                                coordinate: establecimiento.coordinate,
+                                showAlert: $viewModel.showOpenInMapsAlert,
+                                mapsURL: viewModel.mapsURL,
+                                prepareMaps: {
+                                    viewModel.prepareMapsURL(for: establecimiento)
+                                },
+                                cameraPosition: $cameraPosition
+                            )
+                        } else {
+                            unknownInfoCard
+                                .padding(.horizontal, 20)
+                            
                             ClaimBannerView {
                                 if appState.userID == nil {
                                     showLoginSheet = true
@@ -45,62 +67,14 @@ struct EstablishmentDetailView: View {
                                     showClaimSheet = true
                                 }
                             }
+                            .padding(.horizontal, 20)
                         }
-                        
-                        EstablishmentInfoSection(
-                            establishment: establecimiento,
-                            callManager: viewModel.callManager,
-                            mapsManager: viewModel.mapsManager,
-                            onCallTap: {
-                                viewModel.prepareCall(phone: establecimiento.phone)
-                            },
-                            onMapTap: {
-                                viewModel.prepareMaps(for: establecimiento)
-                            }
-                        )
-                        
-                        // Los establecimientos importados no tienen servicios verificados.
-                        if establecimiento.hasOwner {
-                            EstablishmentServicesSection(establishment: establecimiento)
-                        }
-                        
-                        if !establecimiento.canchas.isEmpty {
-                            EstablishmentFieldsSection(
-                                canchas: establecimiento.canchas,
-                                establecimientoID: establecimiento.id
-                            )
-                        } else {
-                            VStack(alignment: .center, spacing: 16) {
-                                Image(systemName: "sportscourt")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 40, height: 40)
-                                    .foregroundStyle(.gray)
-                                
-                                Text("No hay canchas registradas")
-                                    .font(.headline)
-                                    .foregroundStyle(.primaryColorGreen)
-                            }
-                            .padding(20)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 210)
-                            .background(.thirdColorWhite)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-                        }
-                        
-                        EstablishmentMapSection(
-                            coordinate: establecimiento.coordinate,
-                            showAlert: $viewModel.showOpenInMapsAlert,
-                            mapsURL: viewModel.mapsURL,
-                            prepareMaps: {
-                                viewModel.prepareMapsURL(for: establecimiento)
-                            },
-                            cameraPosition: $cameraPosition
-                        )
                     }
-                    .padding(.top)
+                    .padding(.bottom, 24)
                     .animation(.easeInOut(duration: 0.4), value: contentVisible)
+                }
+                .safeAreaInset(edge: .bottom) {
+                    bottomBar(for: establecimiento)
                 }
                 .alert("¿Estás seguro de que quieres eliminar este establecimiento?", isPresented: $showDeleteConfirmation) {
                     Button("Eliminar", role: .destructive) {
@@ -115,18 +89,37 @@ struct EstablishmentDetailView: View {
                 VStack(spacing: 16) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.system(size: 48))
-                        .foregroundStyle(.primaryColorGreen)
+                        .foregroundStyle(Color.brandDeepGreen)
                     Text("Error al cargar el establecimiento")
                         .font(.headline)
                     Text(message)
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.brandTextSecondary)
                 }
                 .padding()
             }
         }
+        // Alertas de llamar y abrir Mapas (antes vivían en EstablishmentInfoSection).
+        .alert(viewModel.callManager.alertTitle, isPresented: Binding(
+            get: { viewModel.callManager.showAlert },
+            set: { viewModel.callManager.showAlert = $0 }
+        )) {
+            Button("Cancelar", role: .cancel) { }
+            Button("Llamar") { viewModel.callManager.openURL() }
+        } message: {
+            Text(viewModel.callManager.alertMessage)
+        }
+        .alert(viewModel.mapsManager.alertTitle, isPresented: Binding(
+            get: { viewModel.mapsManager.showAlert },
+            set: { viewModel.mapsManager.showAlert = $0 }
+        )) {
+            Button("Cancelar", role: .cancel) { }
+            Button("Abrir") { viewModel.mapsManager.openURL() }
+        } message: {
+            Text(viewModel.mapsManager.alertMessage)
+        }
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Establecimiento")
+        .navigationTitle("")
         .sheet(isPresented: $showRegisterField) {
             RegisterFieldView(establecimientoID: establishmentID)
         }
@@ -161,6 +154,214 @@ struct EstablishmentDetailView: View {
                     }
                 }
             }
+        }
+    }
+    
+    // MARK: - Secciones
+    
+    @ViewBuilder
+    private func hero(for establecimiento: EstablishmentResponse) -> some View {
+        if establecimiento.hasOwner || !establecimiento.photoEstablishment.isEmpty {
+            PhotoGalleryView(photoURLs: establecimiento.photoEstablishment, height: 280)
+        } else {
+            // Importada de Google Maps: sin fotos, mostramos dónde queda.
+            Map(initialPosition: .region(MKCoordinateRegion(
+                center: establecimiento.coordinate,
+                span: .init(latitudeDelta: 0.006, longitudeDelta: 0.006)
+            ))) {
+                Marker(establecimiento.name, systemImage: "sportscourt.fill", coordinate: establecimiento.coordinate)
+                    .tint(Color.secondaryColorBlack)
+            }
+            .frame(height: 220)
+            .allowsHitTesting(false)
+            .accessibilityLabel(Text("Mapa con la ubicación de \(establecimiento.name)"))
+        }
+    }
+    
+    private func header(for establecimiento: EstablishmentResponse) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 6) {
+                if establecimiento.hasOwner {
+                    BrandTag(text: String(localized: "Verificada"), style: .verified, systemImage: "checkmark")
+                    ForEach(establecimiento.fieldTags, id: \.self) { tag in
+                        BrandTag(text: tag)
+                    }
+                } else {
+                    BrandTag(text: String(localized: "Sin verificar · datos de Google Maps"), style: .warning)
+                }
+            }
+            
+            Text(establecimiento.name)
+                .font(.system(size: 26, weight: .heavy))
+                .foregroundStyle(Color.brandInk)
+            
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
+                Text(establecimiento.address2.map { $0.isEmpty ? establecimiento.address : "\(establecimiento.address), \($0)" } ?? establecimiento.address)
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.brandTextSecondary)
+                Spacer(minLength: 0)
+                Button("Cómo llegar") {
+                    viewModel.prepareMaps(for: establecimiento)
+                }
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Color.brandDeepGreen)
+                .fixedSize()
+            }
+            
+            if !establecimiento.info.isEmpty {
+                Text(establecimiento.info)
+                    .font(.system(size: 15))
+                    .foregroundStyle(Color.brandInk)
+                    .padding(.top, 4)
+            }
+        }
+    }
+    
+    private func fieldsSection(for establecimiento: EstablishmentResponse) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Canchas y precios")
+                .font(.system(size: 17, weight: .bold))
+            
+            if establecimiento.canchas.isEmpty {
+                Text("El dueño todavía no registró sus canchas.")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.brandTextSecondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(16)
+                    .background(Color.brandCard, in: RoundedRectangle(cornerRadius: 14))
+            } else {
+                VStack(spacing: 0) {
+                    ForEach(Array(establecimiento.canchas.enumerated()), id: \.element.id) { index, cancha in
+                        NavigationLink {
+                            FieldDetailView(fieldId: cancha.id, establecimientoID: establecimiento.id)
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Cancha \(index + 1) · \(cancha.modalidad)")
+                                        .font(.system(size: 15, weight: .semibold))
+                                        .foregroundStyle(Color.brandInk)
+                                    Text(fieldDetails(cancha))
+                                        .font(.system(size: 13))
+                                        .foregroundStyle(Color.brandTextSecondary)
+                                }
+                                Spacer()
+                                if cancha.precio > 0 {
+                                    (Text(EstablishmentResponse.formatPrice(cancha.precio)).font(.system(size: 16, weight: .bold))
+                                     + Text("/h").font(.system(size: 13)).foregroundColor(Color.brandTextSecondary))
+                                        .foregroundStyle(Color.brandInk)
+                                }
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(Color.brandTextSecondary)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 14)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        
+                        if index < establecimiento.canchas.count - 1 {
+                            Divider().padding(.leading, 16)
+                        }
+                    }
+                }
+                .background(Color.brandCard, in: RoundedRectangle(cornerRadius: 14))
+                .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.brandBorder, lineWidth: 1))
+            }
+        }
+    }
+    
+    private func fieldDetails(_ cancha: FieldResponse) -> String {
+        var parts = [cancha.tipo.capitalized]
+        if cancha.cubierta { parts.append(String(localized: "Cubierta")) }
+        if cancha.iluminada { parts.append(String(localized: "Iluminada")) }
+        return parts.joined(separator: " · ")
+    }
+    
+    private var unknownInfoCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Todavía no sabemos")
+                .font(.system(size: 15, weight: .bold))
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Precio por hora", systemImage: "dollarsign.circle")
+                Label("Tipo de cancha y tamaño", systemImage: "sportscourt")
+                Label("Teléfono y horarios", systemImage: "phone")
+            }
+            .font(.system(size: 14))
+            .foregroundStyle(Color.brandTextSecondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.brandCard, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.brandBorder, lineWidth: 1))
+    }
+    
+    // MARK: - Barra inferior fija
+    
+    private func bottomBar(for establecimiento: EstablishmentResponse) -> some View {
+        HStack(spacing: 10) {
+            if establecimiento.hasOwner {
+                if let price = establecimiento.minPriceText {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Desde")
+                            .font(.system(size: 12))
+                            .foregroundStyle(Color.brandTextSecondary)
+                        Text("\(price)/h")
+                            .font(.system(size: 18, weight: .heavy))
+                            .foregroundStyle(Color.brandInk)
+                    }
+                    .fixedSize()
+                    .padding(.trailing, 4)
+                }
+                
+                if !establecimiento.phone.isEmpty {
+                    Button {
+                        viewModel.prepareCall(phone: establecimiento.phone)
+                    } label: {
+                        Image(systemName: "phone.fill")
+                    }
+                    .buttonStyle(BrandIconButtonStyle())
+                    .accessibilityLabel(Text("Llamar"))
+                }
+                
+                if let url = establecimiento.whatsAppURL {
+                    Button {
+                        openURL(url)
+                    } label: {
+                        Label("Reservar por WhatsApp", systemImage: "bubble.left.fill")
+                    }
+                    .buttonStyle(BrandPrimaryButtonStyle())
+                } else {
+                    Button {
+                        viewModel.prepareMaps(for: establecimiento)
+                    } label: {
+                        Label("Cómo llegar", systemImage: "location.fill")
+                    }
+                    .buttonStyle(BrandPrimaryButtonStyle())
+                }
+            } else {
+                Button {
+                    viewModel.prepareMaps(for: establecimiento)
+                } label: {
+                    Label("Cómo llegar", systemImage: "location.fill")
+                }
+                .buttonStyle(BrandPrimaryButtonStyle())
+                
+                if let shareURL = establecimiento.mapsShareURL {
+                    ShareLink(item: shareURL, subject: Text(establecimiento.name)) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                    .buttonStyle(BrandIconButtonStyle())
+                    .accessibilityLabel(Text("Compartir"))
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .background(Color.brandCard)
+        .overlay(alignment: .top) {
+            Rectangle().fill(Color.brandBorder).frame(height: 1)
         }
     }
     

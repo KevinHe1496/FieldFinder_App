@@ -21,7 +21,8 @@ struct CustomButtonView: View {
             Text(title)
                 .font(.appButton)
                 .padding()
-                .foregroundStyle(textColor)
+                // El blanco sobre el verde de marca no tiene contraste suficiente: sobre verde va texto negro.
+                .foregroundStyle(color == .primaryColorGreen ? Color.secondaryColorBlack : textColor)
                 .frame(maxWidth: .infinity)
                 .background(color)
                 .clipShape(.buttonBorder)

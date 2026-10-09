@@ -13,30 +13,29 @@ struct ClaimBannerView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 10) {
-                Image(systemName: "building.2.crop.circle.fill")
-                    .font(.title)
-                    .foregroundStyle(.primaryColorGreen)
-                Text("¿Eres el dueño de este lugar?")
-                    .font(.headline)
-                    .foregroundStyle(.primaryColorGreen)
+                Image(systemName: "flag.fill")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Color.secondaryColorBlack)
+                    .frame(width: 36, height: 36)
+                    .background(Color.primaryColorGreen, in: RoundedRectangle(cornerRadius: 10))
+                    .accessibilityHidden(true)
+                Text("¿Es tu cancha?")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(.white)
             }
 
-            Text("Esta ficha aún no está verificada por el dueño. Reclámala gratis y agrega fotos, canchas, precios y tu teléfono para que más jugadores te encuentren.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+            Text("Reclámala gratis: agrega fotos, precios y tu WhatsApp para que los jugadores reserven contigo.")
+                .font(.system(size: 14))
+                .foregroundStyle(Color.white.opacity(0.78))
+                .fixedSize(horizontal: false, vertical: true)
 
-            CustomButtonView(
-                title: "Reclamar establecimiento",
-                color: .primaryColorGreen,
-                textColor: .white,
-                action: onClaimTap
-            )
+            Button("Reclamar gratis", action: onClaimTap)
+                .buttonStyle(BrandPrimaryButtonStyle())
         }
-        .padding(20)
+        .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thirdColorWhite)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .background(Color.secondaryColorBlack, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.brandBorder, lineWidth: 1))
     }
 }
 
