@@ -40,7 +40,7 @@ struct PhotoGalleryView: View {
                             VStack(spacing: 10) {
                                 Image(systemName: "photo.badge.plus")
                                     .font(.system(size: 40))
-                                Text("Sin fotos disponibles")
+                                Text("No se pudo cargar la imagen")
                                     .font(.caption)
                                     .fontWeight(.medium)
                             }

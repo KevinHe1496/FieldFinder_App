@@ -27,14 +27,14 @@ struct EstablishmentRequest: Codable {
 struct EstablishmentResponse: Codable, Identifiable {
     let id: String
     let name: String
-    let ownerID: String
+    let ownerID: String?
     let info: String
     let address: String
     var isFavorite: Bool
     let address2: String?
     let phone: String
-    let userName: String
-    let userRol: String
+    let userName: String?
+    let userRol: String?
     let parquedero: Bool
     let vestidores: Bool
     let banos: Bool
