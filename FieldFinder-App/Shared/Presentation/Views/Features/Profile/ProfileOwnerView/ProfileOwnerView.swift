@@ -64,6 +64,10 @@ struct ProfileOwnerView: View {
                                 OwnerView()
                             }
                             
+                            NavigationLink("Mis solicitudes") {
+                                MyClaimsView()
+                            }
+                            
                             NavigationLink("Condiciones de uso") {
                                 TermsAndConditionsView()
                             }

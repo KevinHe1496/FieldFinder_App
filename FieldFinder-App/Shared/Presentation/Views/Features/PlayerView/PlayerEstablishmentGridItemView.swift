@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PlayerEstablishmentGridItemView: View {
     let establishment: EstablishmentResponse
-    @State var viewModelUser = ProfileUserViewModel()
+    @Environment(AppState.self) private var appState
     @Bindable var viewModel: PlayerGetNearbyEstablishmentsViewModel
     @State private var favoriteState: Bool = false
 
@@ -21,7 +21,8 @@ struct PlayerEstablishmentGridItemView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .shadow(radius: 4)
 
-                if case .success(let user) = viewModelUser.status, user.rol == "jugador" {
+                // El rol ya está en AppState; antes cada tarjeta pedía /users/me al aparecer.
+                if appState.userRole == .jugador {
                     FavoriteButton(isFavorite: $favoriteState) {
                         Task {
                             try await viewModel.setLikeHero(establishmentId: establishment.id)
@@ -51,9 +52,6 @@ struct PlayerEstablishmentGridItemView: View {
         }
         .onAppear {
             favoriteState = viewModel.isFavorite(establishmentId: establishment.id)
-            Task {
-                try await viewModelUser.getMe()
-            }
         }
         .onChange(of: viewModel.favoritesData) { _, _ in
             favoriteState = viewModel.isFavorite(establishmentId: establishment.id)
@@ -71,6 +69,7 @@ struct PlayerEstablishmentGridItemView: View {
 
 #Preview {
     PlayerEstablishmentGridItemView(establishment: .sample, viewModel: PlayerGetNearbyEstablishmentsViewModel())
+        .environment(AppState())
 }
 
 

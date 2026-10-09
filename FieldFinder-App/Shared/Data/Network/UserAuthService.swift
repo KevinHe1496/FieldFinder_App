@@ -47,6 +47,8 @@ final class UserAuthService: AuthServiceProtocol {
             let result = try JSONDecoder().decode(LoginResponse.self, from: data)
             
             tokenJWT = result.accessToken
+            // El refresh token permite renovar la sesión cuando el access token expira (24 h).
+            FFSessionTokens.saveRefreshToken(result.refreshToken)
             
         } catch {
             throw FFError.errorParsingData
@@ -86,6 +88,8 @@ final class UserAuthService: AuthServiceProtocol {
             let result = try JSONDecoder().decode(LoginResponse.self, from: data)
             
             tokenJWT = result.accessToken
+            // El refresh token permite renovar la sesión cuando el access token expira (24 h).
+            FFSessionTokens.saveRefreshToken(result.refreshToken)
             
             
         } catch {

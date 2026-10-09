@@ -59,6 +59,12 @@ struct ProfileUserView: View {
                                 Text("Mis favoritos")
                                     .foregroundStyle(.primaryColorGreen)
                             }
+                            NavigationLink {
+                                MyClaimsView()
+                            } label: {
+                                Text("Mis solicitudes")
+                                    .foregroundStyle(.primaryColorGreen)
+                            }
                         }
 
                         Section {

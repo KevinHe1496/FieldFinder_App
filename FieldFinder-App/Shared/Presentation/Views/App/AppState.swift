@@ -32,6 +32,8 @@ final class AppState {
     
     var messageAlert: String = ""
     var showAlert: Bool = false
+    /// Se muestra cuando el token expiró y no se pudo renovar.
+    var showSessionExpiredAlert: Bool = false
     var isLoading: Bool = false
     var selectedEstablishmentID: String?
     
@@ -40,6 +42,9 @@ final class AppState {
     var isLogged: Bool = false
     
     private var storeTask: Task<Void, Never>?
+    
+    @ObservationIgnored
+    private var sessionExpiredObserver: NSObjectProtocol?
     
     /// The StoreKit products we've loaded for the store.
     var products = [Product]()
@@ -58,6 +63,16 @@ final class AppState {
             self.userRole = role
         }
         self.userID = defaults.string(forKey: "userID")
+        
+        sessionExpiredObserver = NotificationCenter.default.addObserver(
+            forName: .ffSessionExpired,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.handleSessionExpired()
+            }
+        }
         
         Task {
             await validateToken()
@@ -120,19 +135,48 @@ final class AppState {
         }
     }
     
+    deinit {
+        if let sessionExpiredObserver {
+            NotificationCenter.default.removeObserver(sessionExpiredObserver)
+        }
+    }
+    
+    /// Al abrir la app: si el token expiró se intenta renovar; si no se puede,
+    /// se borra la sesión guardada y la app queda en modo invitado.
     @MainActor
     func validateToken() async {
-        Task {
-            if (await loginUseCase.validateToken() == true) {
-                let user = try await UserProfileServiceUseCase().fetchUser()
-                self.userRole = user.userRole
-                self.userID = user.id
-                self.status = .loaded
-            } else {
-                self.status = .login
-                NSLog("Login Error")
-            }
+        guard await loginUseCase.validateToken() else {
+            clearLocalSession()
+            self.status = .login
+            return
         }
+        
+        do {
+            let user = try await UserProfileServiceUseCase().fetchUser()
+            self.userRole = user.userRole
+            self.userID = user.id
+            self.status = .loaded
+        } catch {
+            NSLog("validateToken: no se pudo cargar el usuario: \(error)")
+            self.status = .login
+        }
+    }
+    
+    /// Llamado cuando una petición recibe 401 y el refresh token tampoco sirve.
+    @MainActor
+    func handleSessionExpired() {
+        // Si ya no hay datos de sesión, ya se manejó (varias peticiones pueden fallar a la vez).
+        guard userID != nil || userRole != nil else { return }
+        clearLocalSession()
+        status = .login
+        showSessionExpiredAlert = true
+    }
+    
+    @MainActor
+    private func clearLocalSession() {
+        FFSessionTokens.clear()
+        userRole = nil
+        userID = nil
     }
     
     @MainActor
